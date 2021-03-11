@@ -66,7 +66,7 @@ def main():
             print(img_SR.shape)
 
             exit()
-                img[:, :, idx_c] = zoom(nii_data[:, :, int(index[idx_z, idx_c])], zoom=scale_factor)
+            img[:, :, idx_c] = zoom(nii_data[:, :, int(index[idx_z, idx_c])], zoom=scale_factor)
             name2save = savepath+nii_name+"_{0:03d}".format(idx_z)+".npy"
             img = maxmin_norm(img) * 255.0
             np.save(name2save, img)
