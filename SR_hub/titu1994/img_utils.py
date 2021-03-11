@@ -5,7 +5,7 @@ import numpy as np
 # from scipy.misc import imresize
 from imageio import imwrite as imsave
 from imageio import imread as imread
-from scipy.ndimage import zoom as imresize
+from skimage.transform import resize as imresize
 
 from sklearn.feature_extraction.image import reconstruct_from_patches_2d, extract_patches_2d
 from scipy.ndimage.filters import gaussian_filter
