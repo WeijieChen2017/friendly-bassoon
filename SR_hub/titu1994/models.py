@@ -507,7 +507,7 @@ class ImageSuperResolutionModel(BaseSuperResolutionModel):
 
         adam = optimizers.Adam(lr=1e-3)
         model.compile(optimizer=adam, loss='mse', metrics=[PSNRLoss])
-        if load_weights: model.load_weights(self.weight_path)
+        if load_weights: model.load_weights(self.weight_path, reshape=True)
 
         self.model = model
         return model
