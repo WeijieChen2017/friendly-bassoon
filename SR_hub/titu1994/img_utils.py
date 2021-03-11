@@ -2,6 +2,9 @@ from __future__ import print_function, division, absolute_import
 
 import numpy as np
 from scipy.misc import imsave, imread, imresize
+
+from imageio import imwrite as imsave
+
 from sklearn.feature_extraction.image import reconstruct_from_patches_2d, extract_patches_2d
 from scipy.ndimage.filters import gaussian_filter
 
