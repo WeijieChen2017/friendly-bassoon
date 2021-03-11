@@ -47,32 +47,24 @@ def main():
         nii_data = np.asanyarray(nii_file.dataobj)
 
         dx, dy, dz = nii_data.shape
-        save_path = "./SR/"+name_dataset+"/"
+        save_path = "./SR_nii/"+name_dataset+"/"
         for path in [save_path]:
             if not os.path.exists(path):
                 os.makedirs(path)
 
-        for idx_z in range(dz):
-            LR_path = "./LR/"+name_dataset+"/"+nii_name+"_{0:03d}".format(idx_z)+".npy"
-            HR_path = "./HR/"+name_dataset+"/"+nii_name+"_{0:03d}".format(idx_z)+".npy"
-            SR_path = "./SR/"+name_dataset+"/"+nii_name+"_{0:03d}".format(idx_z)+"_rlt.npy"
-
-            img_LR = np.load(LR_path)
-            img_HR = np.load(HR_path)
-            img_SR = np.load(SR_path)
-
-            print(img_LR.shape)
-            print(img_HR.shape)
-            print(img_SR.shape)
-
-            exit()
-            img[:, :, idx_c] = zoom(nii_data[:, :, int(index[idx_z, idx_c])], zoom=scale_factor)
-            name2save = savepath+nii_name+"_{0:03d}".format(idx_z)+".npy"
-            img = maxmin_norm(img) * 255.0
-            np.save(name2save, img)
-            print(name2save, img.shape)
-        print(str(idx_z)+" images have been saved.")
-        print("#"*20)
+        for package in [["LR", ""], ["SR", "_rlt"]]
+            modality = package[0]
+            load_tag = package[1]
+            curr_data = np.zeros(nii_data.shape)
+            for idx_z in range(dz):
+                curr_path = "./"+modality+"/"+name_dataset+"/"+nii_name+"_{0:03d}".format(idx_z)+tag+".npy"
+                curr_img = np.load(curr_path)
+                curr_scale_factor = dx / curr_img.shape[0]
+                curr_data[:, :, idx_z] = zoom(curr_img, zoom=curr_scale_factor)            
+            curr_data = curr_data / np.sum(curr_data) * np.sum(nii_data)
+            curr_file = nib.Nifti1Image(curr_data, nii_affine, nii_header)
+            nib.save(curr_file, save_path+nii_name+"_"+modality+".nii.gz")
+            print(save_path+nii_name+"_"+modality+".nii.gz saved.")
 
 if __name__ == "__main__":
     main()
