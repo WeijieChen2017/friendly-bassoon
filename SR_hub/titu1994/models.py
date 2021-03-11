@@ -16,6 +16,8 @@ import os
 import time
 import warnings
 
+K.set_image_data_format('channels_first')
+
 try:
     import cv2
     _cv2_available = True
