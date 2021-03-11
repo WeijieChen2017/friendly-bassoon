@@ -53,9 +53,9 @@ def main():
                 os.makedirs(path)
 
         for idx_z in range(dz):
-            LR_path = "./LR/"+name_dataset+"/"+nii_name+"_{0:03d}".format(idx_z)+"*.npy"
-            HR_path = "./HR/"+name_dataset+"/"+nii_name+"_{0:03d}".format(idx_z)+"*.npy"
-            SR_path = "./SR/"+name_dataset+"/"+nii_name+"_{0:03d}".format(idx_z)+"*.npy"
+            LR_path = "./LR/"+name_dataset+"/"+nii_name+"_{0:03d}".format(idx_z)+".npy"
+            HR_path = "./HR/"+name_dataset+"/"+nii_name+"_{0:03d}".format(idx_z)+".npy"
+            SR_path = "./SR/"+name_dataset+"/"+nii_name+"_{0:03d}".format(idx_z)+"_rlt.npy"
 
             img_LR = np.load(LR_path)
             img_HR = np.load(HR_path)
