@@ -2,8 +2,8 @@ import models
 import argparse
 import tensorflow as tf
 
-# from keras import backend as K
-# K.set_image_data_format('channels_first')
+from keras import backend as K
+K.set_image_data_format("channels_first")
 # K.common.set_image_dim_ordering('tf')
 
 
