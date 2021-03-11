@@ -52,7 +52,7 @@ def main():
             if not os.path.exists(path):
                 os.makedirs(path)
 
-        for package in [["LR", ""], ["SR", "_rlt"]]
+        for package in [["LR", ""], ["SR", "_rlt"]]:
             modality = package[0]
             load_tag = package[1]
             curr_data = np.zeros(nii_data.shape)
