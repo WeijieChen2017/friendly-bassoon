@@ -235,7 +235,7 @@ class BaseSuperResolutionModel(object):
 
         if verbose: print("Saving image.")
         # imsave(filename, result)
-        np.save(filename+".npy", result)
+        np.save(filename, result)
 
     def __match_autoencoder_size(self, img_dim_1, img_dim_2, init_dim_1, init_dim_2, scale_factor):
         if self.type_requires_divisible_shape:
