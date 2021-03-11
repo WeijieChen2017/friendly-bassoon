@@ -141,7 +141,10 @@ class BaseSuperResolutionModel(object):
         :param mode: mode of upscaling. Can be "patch" or "fast"
         """
         import os
-        from scipy.misc import imread, imresize, imsave
+        # from scipy.misc import imread, imresize, imsave
+        from imageio import imwrite as imsave
+        from imageio import imread as imread
+        from scipy.ndimage import zoom as imresize
 
         # Destination path
         path = os.path.splitext(img_path)
