@@ -70,7 +70,7 @@ def main():
                 np.save(name2save, img)
                 print(name2save)
             print(str(idx_z)+" images have been saved.")
-            prine("#"*20)
+            print("#"*20)
 
 if __name__ == "__main__":
     main()
