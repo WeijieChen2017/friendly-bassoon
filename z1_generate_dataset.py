@@ -58,7 +58,7 @@ def main():
             if not os.path.exists(path):
                 os.makedirs(path)
 
-        for package in [[nii_data, save_path, 1], [nii_smooth, save_path_smooth, 1/2]]:
+        for package in [[nii_data, save_path, 2], [nii_smooth, save_path_smooth, 1/2]]:
             data = package[0]
             savepath = package[1]
             scale_factor = package[2]
