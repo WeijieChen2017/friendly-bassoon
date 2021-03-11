@@ -16,7 +16,7 @@ import os
 import time
 import warnings
 
-K.set_image_data_format('channels_first')
+K.set_image_data_format('th')
 
 try:
     import cv2
