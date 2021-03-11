@@ -1,12 +1,7 @@
 from __future__ import print_function, division, absolute_import
 
 import numpy as np
-# from scipy.misc import imsave, imread, imresize
-# from scipy.misc import imresize
-from imageio import imwrite as imsave
-from imageio import imread as imread
-from scipy.ndimage import zoom as imresize
-
+from scipy.misc import imsave, imread, imresize
 from sklearn.feature_extraction.image import reconstruct_from_patches_2d, extract_patches_2d
 from scipy.ndimage.filters import gaussian_filter
 
@@ -152,8 +147,7 @@ def transform_images_temp(directory, output_directory, scaling_factor=2, max_nb_
         img = imread(directory + file, mode='RGB')
 
         # Resize to 256 x 256
-        # img = imresize(img, (img_size, img_size))
-        img = imresize(img, zoom=scaling_factor)
+        img = imresize(img, (img_size, img_size))
 
         # Create patches
         hr_patch_size = 64
@@ -184,13 +178,11 @@ def transform_images_temp(directory, output_directory, scaling_factor=2, max_nb_
             #op = gaussian_filter(ip, sigma=0.5)
 
             # Subsample by scaling factor to Y
-            # op = imresize(ip, (lr_patch_size, lr_patch_size), interp='bicubic')
-            op = imresize(ip, zoom = lr_patch_size/ip.shape[0])
+            op = imresize(ip, (lr_patch_size, lr_patch_size), interp='bicubic')
 
             if not true_upscale:
                 # Upscale by scaling factor to Y
-                # op = imresize(op, (hr_patch_size, hr_patch_size), interp='bicubic')
-                op = imresize(ip, zoom = hr_patch_size/ip.shape[0])
+                op = imresize(op, (hr_patch_size, hr_patch_size), interp='bicubic')
 
             # Save Y
             imsave(output_directory + "/X/" + "%d_%d.png" % (index + id_advance, id_advance + i + 1), op)
@@ -225,8 +217,7 @@ def subimage_generator(img, stride, patch_size, nb_hr_images):
 def make_patches(x, scale, patch_size, upscale=True, verbose=1):
     '''x shape: (num_channels, rows, cols)'''
     height, width = x.shape[:2]
-    # if upscale: x = imresize(x, (height * scale, width * scale))
-    if upscale: x = imresize(x, zoom=scale)
+    if upscale: x = imresize(x, (height * scale, width * scale))
     patches = extract_patches_2d(x, (patch_size, patch_size))
     return patches
 
@@ -300,8 +291,7 @@ def image_generator(directory, scale_factor=2, target_shape=None, channels=3, sm
             x_fn = X_filenames[j]
             img = imread(x_fn, mode='RGB')
             if small_train_images:
-                # img = imresize(img, (32 * _image_scale_multiplier, 32 * _image_scale_multiplier))
-                img = imresize(img, 32 * _image_scale_multiplier / img.shape[0])
+                img = imresize(img, (32 * _image_scale_multiplier, 32 * _image_scale_multiplier))
             img = img.astype('float32') / 255.
 
             if K.image_dim_ordering() == "th":
