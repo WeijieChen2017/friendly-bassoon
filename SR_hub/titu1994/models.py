@@ -129,7 +129,7 @@ class BaseSuperResolutionModel(object):
 
 
     def upscale(self, img_path, save_intermediate=False, return_image=False, suffix="scaled",
-                patch_size=8, mode="patch", verbose=True):
+                patch_size=8, mode="patch", verbose=True, model_type="sr"):
         """
         Standard method to upscale an image.
         :param img_path:  path to the image
@@ -145,7 +145,7 @@ class BaseSuperResolutionModel(object):
 
         # Destination path
         path = os.path.splitext(img_path)
-        filename = path[0] + "_" + suffix + "(%dx)" % (self.scale_factor) + path[1]
+        filename = path[0] + "_" + suffix + "_%dx_" % (self.scale_factor) + model_type + path[1]
 
         # Read image
         scale_factor = int(self.scale_factor)

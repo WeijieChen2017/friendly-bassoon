@@ -59,4 +59,4 @@ with tf.device('/CPU:0'):
         else:
             model = models.DistilledResNetSR(scale_factor)
 
-        model.upscale(p, save_intermediate=save, mode=mode, patch_size=patch_size, suffix=suffix)
+        model.upscale(p, save_intermediate=save, mode=mode, patch_size=patch_size, suffix=suffix, model_type=model_type)
