@@ -42,6 +42,8 @@ def main():
         print("@"*60)
         print(nii_path)
         nii_file = nib.load(nii_path)
+        nii_name = os.path.basename(nii_file)
+        nii_name = os.path.splittext(nii_name)[0]
         nii_header = nii_file.header
         nii_affine = nii_file.affine
         nii_data = np.asanyarray(nii_file.dataobj)
@@ -66,7 +68,7 @@ def main():
                 for idx_c in range(3):
                     # img[:, :, idx_c] = zoom(nii_data[:, :, int(index[idx_z, idx_c])], zoom=resize_f)
                     img[:, :, idx_c] = data[:, :, int(index[idx_z, idx_c])]
-                name2save = savepath+"img{0:03d}".format(idx_z)+".npy"
+                name2save = savepath+nii_name+"_{0:03d}".format(idx_z)+".npy"
                 np.save(name2save, img)
                 print(name2save)
             print(str(idx_z)+" images have been saved.")
