@@ -145,11 +145,7 @@ class BaseSuperResolutionModel(object):
         from imageio import imwrite as imsave
         from imageio import imread as imread
         from skimage.transform import resize as imresize
-
-        np.array(Image.fromarray(arr).resize()).
-
         from PIL import Image
-resized_img = np.array(Image.fromarray(orj_img).resize(size=(new_h, new_w)))
 
         # Destination path
         path = os.path.splitext(img_path)
