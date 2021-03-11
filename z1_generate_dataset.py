@@ -66,7 +66,7 @@ def main():
                 for idx_c in range(3):
                     # img[:, :, idx_c] = zoom(nii_data[:, :, int(index[idx_z, idx_c])], zoom=resize_f)
                     img[:, :, idx_c] = data[:, :, int(index[idx_z, idx_c])]
-                name2save = savepath+"img{0:2d}".format(idx_z)+".npy"
+                name2save = savepath+"img{0:03d}".format(idx_z)+".npy"
                 np.save(name2save, img)
                 print(name2save)
             print(str(idx_z)+" images have been saved.")
