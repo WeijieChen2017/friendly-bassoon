@@ -43,7 +43,7 @@ def main():
         print(nii_path)
         nii_file = nib.load(nii_path)
         nii_name = os.path.basename(nii_path)
-        nii_name = os.path.splittext(nii_name)[0]
+        nii_name = os.path.splitext(nii_name)[0]
         nii_header = nii_file.header
         nii_affine = nii_file.affine
         nii_data = np.asanyarray(nii_file.dataobj)
