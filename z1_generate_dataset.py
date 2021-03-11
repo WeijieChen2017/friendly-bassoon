@@ -46,7 +46,7 @@ def main():
         nii_affine = nii_file.affine
         nii_data = np.asanyarray(nii_file.dataobj)
         nii_data_norm = maxmin_norm(nii_data) * 255
-        nii_smooth = processing.smooth_image(nii_file, fwhm=fwhm, mode='nearest')
+        nii_smooth = processing.smooth_image(nii_file, fwhm=3, mode='nearest')
         nii_smooth_norm = maxmin_norm(np.asanyarray(nii_smooth.dataobj)) * 255
 
         dx, dy, dz = nii_data.shape
