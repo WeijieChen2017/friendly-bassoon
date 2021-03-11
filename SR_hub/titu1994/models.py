@@ -279,7 +279,7 @@ def _evaluate(sr_model : BaseSuperResolutionModel, validation_dir, scale_pred=Fa
     Evaluates the model on the Validation images
     """
     print("Validating %s model" % sr_model.model_name)
-    if sr_model.model == None: sr_model.create_model(load_weights=True)
+    if sr_model.model == None: sr_model.create_model(load_weights=True, reshape=True)
     if sr_model.evaluation_func is None:
         if sr_model.uses_learning_phase:
             sr_model.evaluation_func = K.function([sr_model.model.layers[0].input, K.learning_phase()],
@@ -437,7 +437,7 @@ def _evaluate_denoise(sr_model : BaseSuperResolutionModel, validation_dir, scale
                 x = x.transpose((0, 3, 1, 2))
                 y = y.transpose((0, 3, 1, 2))
 
-            sr_model.model = sr_model.create_model(height, width, load_weights=True)
+            sr_model.model = sr_model.create_model(height, width, load_weights=True, reshape=True)
 
             if sr_model.evaluation_func is None:
                 if sr_model.uses_learning_phase:
@@ -551,7 +551,7 @@ class ExpantionSuperResolution(BaseSuperResolutionModel):
         model = Model(init, out)
         adam = optimizers.Adam(lr=1e-3)
         model.compile(optimizer=adam, loss='mse', metrics=[PSNRLoss])
-        if load_weights: model.load_weights(self.weight_path)
+        if load_weights: model.load_weights(self.weight_path, reshape=True)
 
         self.model = model
         return model
@@ -598,7 +598,7 @@ class DenoisingAutoEncoderSR(BaseSuperResolutionModel):
         model = Model(init, decoded)
         adam = optimizers.Adam(lr=1e-3)
         model.compile(optimizer=adam, loss='mse', metrics=[PSNRLoss])
-        if load_weights: model.load_weights(self.weight_path)
+        if load_weights: model.load_weights(self.weight_path, reshape=True)
 
         self.model = model
         return model
@@ -655,7 +655,7 @@ class DeepDenoiseSR(BaseSuperResolutionModel):
         model = Model(init, decoded)
         adam = optimizers.Adam(lr=1e-3)
         model.compile(optimizer=adam, loss='mse', metrics=[PSNRLoss])
-        if load_weights: model.load_weights(self.weight_path)
+        if load_weights: model.load_weights(self.weight_path, reshape=True)
 
         self.model = model
         return model
@@ -708,7 +708,7 @@ class ResNetSR(BaseSuperResolutionModel):
 
         adam = optimizers.Adam(lr=1e-3)
         model.compile(optimizer=adam, loss='mse', metrics=[PSNRLoss])
-        if load_weights: model.load_weights(self.weight_path, by_name=True)
+        if load_weights: model.load_weights(self.weight_path, by_name=True, reshape=True)
 
         self.model = model
         return model
@@ -785,7 +785,7 @@ class EfficientSubPixelConvolutionalSR(BaseSuperResolutionModel):
 
         adam = optimizers.Adam(lr=1e-3)
         model.compile(optimizer=adam, loss='mse', metrics=[PSNRLoss])
-        if load_weights: model.load_weights(self.weight_path)
+        if load_weights: model.load_weights(self.weight_path, reshape=True)
 
         self.model = model
         return model
@@ -848,13 +848,13 @@ class GANImageSuperResolutionModel(BaseSuperResolutionModel):
 
         adam = optimizers.Adam(lr=1e-4)
         gen_model.compile(optimizer=adam, loss='mse', metrics=[PSNRLoss])
-        if load_weights and mode == 'test': gen_model.load_weights(self.weight_path, by_name=True)
+        if load_weights and mode == 'test': gen_model.load_weights(self.weight_path, by_name=True, reshape=True)
 
         self.model = gen_model
 
         if mode == 'train':
             try:
-                gen_model.load_weights(self.weight_path)
+                gen_model.load_weights(self.weight_path, reshape=True)
             except:
                 print('Could not load weights of GAN SR model for training.')
 
@@ -884,7 +884,7 @@ class GANImageSuperResolutionModel(BaseSuperResolutionModel):
 
             adam = optimizers.Adam(lr=1e-3)
             disc_model.compile(optimizer=adam, loss='categorical_crossentropy', metrics=['acc'])
-            if load_weights: disc_model.load_weights(self.disc_weight_path)
+            if load_weights: disc_model.load_weights(self.disc_weight_path, reshape=True)
 
             for layer in disc_model.layers:
                 layer.trainable = False
@@ -1110,7 +1110,7 @@ class DistilledResNetSR(BaseSuperResolutionModel):
 
         model = Model(init, x)
         # dont compile yet
-        if load_weights: model.load_weights(self.weight_path, by_name=True)
+        if load_weights: model.load_weights(self.weight_path, by_name=True, reshape=True)
 
         self.model = model
         return model
@@ -1187,7 +1187,7 @@ class NonLocalResNetSR(BaseSuperResolutionModel):
 
         adam = optimizers.Adam(lr=1e-3)
         model.compile(optimizer=adam, loss='mse', metrics=[PSNRLoss])
-        if load_weights: model.load_weights(self.weight_path, by_name=True)
+        if load_weights: model.load_weights(self.weight_path, by_name=True, reshape=True)
 
         self.model = model
         return model
