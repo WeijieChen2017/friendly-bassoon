@@ -67,7 +67,7 @@ def main():
             
             curr_data_norm = maxmin_norm(curr_data)
             for metric in metric_hub:
-                print(metric_hub.__name__, metric(nii_data_norm, curr_data_norm))
+                print(metric.__name__, metric(nii_data_norm, curr_data_norm))
             curr_file = nib.Nifti1Image(curr_data, nii_affine, nii_header)
             nib.save(curr_file, save_path+nii_name+"_"+modality+".nii.gz")
             print(save_path+nii_name+"_"+modality+".nii.gz saved.")
