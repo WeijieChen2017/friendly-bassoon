@@ -144,8 +144,7 @@ class BaseSuperResolutionModel(object):
         # from scipy.misc import imread, imresize, imsave
         from imageio import imwrite as imsave
         from imageio import imread as imread
-        from skimage.transform import resize as imresize
-        from PIL import Image
+        from scipy.ndimage import zoom as imresize
 
         # Destination path
         path = os.path.splitext(img_path)
@@ -183,8 +182,7 @@ class BaseSuperResolutionModel(object):
             img_dim_1, img_dim_2 = self.__match_autoencoder_size(img_dim_1, img_dim_2, init_dim_1, init_dim_2,
                                                                  scale_factor)
 
-            # images = imresize(true_img, (img_dim_1, img_dim_2))
-            images = np.array(Image.fromarray(true_img).resize(size=(img_dim_1, img_dim_2)))
+            images = imresize(true_img, zoom=scale_factor)
             images = np.expand_dims(images, axis=0)
             print("Image is reshaped to : (%d, %d, %d)" % (images.shape[1], images.shape[2], images.shape[3]))
 
