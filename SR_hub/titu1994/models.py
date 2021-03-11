@@ -190,7 +190,7 @@ class BaseSuperResolutionModel(object):
             fn = path[0] + "_intermediate_" + path[1]
             intermediate_img = imresize(true_img, (init_dim_1 * scale_factor, init_dim_2 * scale_factor))
             # imsave(fn, intermediate_img)
-            np.save(fn+".npy", intermediate_img)
+            np.save(fn, intermediate_img)
 
         # Transpose and Process images
         if K.image_data_format() == "th":
