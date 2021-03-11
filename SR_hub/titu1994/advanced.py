@@ -111,7 +111,7 @@ class TensorBoardBatch(TensorBoard):
 
 ''' Theano Backend function '''
 
-def depth_to_scale(x, scale, output_shape, dim_ordering=K.image_dim_ordering(), name=None):
+def depth_to_scale(x, scale, output_shape, dim_ordering=K.image_data_format(), name=None):
     ''' Uses phase shift algorithm [1] to convert channels/depth for spacial resolution '''
 
     import theano.tensor as T
