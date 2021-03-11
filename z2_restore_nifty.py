@@ -57,7 +57,7 @@ def main():
             load_tag = package[1]
             curr_data = np.zeros(nii_data.shape)
             for idx_z in range(dz):
-                curr_path = "./"+modality+"/"+name_dataset+"/"+nii_name+"_{0:03d}".format(idx_z)+tag+".npy"
+                curr_path = "./"+modality+"/"+name_dataset+"/"+nii_name+"_{0:03d}".format(idx_z)+load_tag+".npy"
                 curr_img = np.load(curr_path)
                 curr_scale_factor = dx / curr_img.shape[0]
                 curr_data[:, :, idx_z] = zoom(curr_img, zoom=curr_scale_factor)            
