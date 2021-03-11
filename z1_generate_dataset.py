@@ -39,6 +39,7 @@ def main():
     nii_list.sort()
 
     for nii_path in nii_list:
+        print("@"*60)
         print(nii_path)
         nii_file = nib.load(nii_path)
         nii_header = nii_file.header
@@ -55,7 +56,7 @@ def main():
             if not os.path.exists(path):
                 os.makedirs(path)
 
-        for package in [[nii_data_norm, save_path], [nii_smooth_norm, save_path_smooth]]
+        for package in [[nii_data_norm, save_path], [nii_smooth_norm, save_path_smooth]]:
             data = package[0]
             savepath = package[1]
 
