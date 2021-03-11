@@ -2,6 +2,10 @@ import models
 import argparse
 import tensorflow as tf
 
+from keras import backend as K
+K.set_image_data_format('th')
+
+
 parser = argparse.ArgumentParser(description="Up-Scales an image using Image Super Resolution Model")
 parser.add_argument("imgpath", type=str, nargs="+", help="Path to input image")
 parser.add_argument("--model", type=str, default="distilled_rnsr", help="Use either image super resolution (sr), "

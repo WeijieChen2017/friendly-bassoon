@@ -16,8 +16,6 @@ import os
 import time
 import warnings
 
-K.set_image_data_format('th')
-
 try:
     import cv2
     _cv2_available = True
@@ -70,7 +68,7 @@ class BaseSuperResolutionModel(object):
     def create_model(self, height=32, width=32, channels=3, load_weights=False, batch_size=128) -> Model:
         """
         Subclass dependent implementation.
-        """
+        """ 
         if self.type_requires_divisible_shape and height is not None and width is not None:
             assert height * img_utils._image_scale_multiplier % 4 == 0, "Height of the image must be divisible by 4"
             assert width * img_utils._image_scale_multiplier % 4 == 0, "Width of the image must be divisible by 4"
