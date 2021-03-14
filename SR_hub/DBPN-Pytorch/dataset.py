@@ -81,24 +81,25 @@ class DatasetFromFolder(data.Dataset):
         self.data_augmentation = data_augmentation
 
     def __getitem__(self, index):
-        input = load_img(self.image_filenames[index][:-6]+"_X.npy")
+        origin = load_img(self.image_filenames[index][:-6]+"_X.npy")
         target = load_img(self.image_filenames[index][:-6]+"_Y.npy")
         # print(input.shape, self.image_filenames[index][:-6]+"_X.npy")
         # print(target.shape, self.image_filenames[index][:-6]+"_Y.npy")
         # input = target.resize((int(target.size[0]/self.upscale_factor),int(target.size[1]/self.upscale_factor)), Image.BICUBIC)       
-        bicubic = rescale_img(input, self.upscale_factor)
+        bicubic = rescale_img(origin, self.upscale_factor)
+        print(bicubic.shape)
         
-        input, target, bicubic, _ = get_patch(input,target,bicubic,self.patch_size, self.upscale_factor)
+        origin, target, bicubic, _ = get_patch(origin,target,bicubic,self.patch_size, self.upscale_factor)
         
         if self.data_augmentation:
-            input, target, bicubic, _ = augment(input, target, bicubic)
+            origin, target, bicubic, _ = augment(origin, target, bicubic)
         
         if self.transform:
-            input = self.transform(input)
+            origin = self.transform(origin)
             bicubic = self.transform(bicubic)
             target = self.transform(target)
                 
-        return input, target, bicubic
+        return origin, target, bicubic
 
     def __len__(self):
         return len(self.image_filenames)
