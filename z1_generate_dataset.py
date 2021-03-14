@@ -76,8 +76,10 @@ def main():
                     img[:, :, idx_c] = nii_data[:, :, int(index[idx_z, idx_c])]
                 name2save = savepath+nii_name+"_{0:03d}".format(idx_z)+suffix+".npy"
                 np.save(name2save, img)
-            print(str(idx_z)+" images have been saved.")
             print("#"*20)
+            print("Last:", savepath+nii_name+"_{0:03d}".format(idx_z)+suffix+".npy")
+            print(str(idx_z)+" images have been saved.")
+            
 
 if __name__ == "__main__":
     main()
