@@ -7,6 +7,7 @@ from os.path import join
 from PIL import Image, ImageOps
 import random
 from random import randrange
+from scipy.ndimage import zoom
 
 def is_image_file(filename):
     return any(filename.endswith(extension) for extension in [".png", ".jpg", ".jpeg", ".npy"])
@@ -19,8 +20,9 @@ def load_img(filepath):
 
 def rescale_img(img_in, scale):
     size_in = img_in.size
-    new_size_in = tuple([int(x * scale) for x in size_in])
-    img_in = img_in.resize(new_size_in, resample=Image.BICUBIC)
+    img_in = zoom(size_in, zoom=(scale, scale, 1))
+    # new_size_in = tuple([int(x * scale) for x in size_in])
+    # img_in = img_in.resize(new_size_in, resample=Image.BICUBIC)
     return img_in
 
 def get_patch(img_in, img_tar, img_bic, patch_size, scale, ix=-1, iy=-1):
