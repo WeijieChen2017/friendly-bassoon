@@ -37,6 +37,7 @@ def main():
     name_dataset = args.nameDataset
     nii_list = glob.glob("./data/"+name_dataset+"/*.nii")+glob.glob("./data/"+name_dataset+"/*.nii.gz")
     nii_list.sort()
+    n_channel = 3
 
     for nii_path in nii_list:
         print("@"*60)
@@ -67,10 +68,10 @@ def main():
             savepath = package[1]
             suffix = package[2]
 
-            index = create_index(data, 3)
-            img = np.zeros((int(dx*scale_factor), int(dy*scale_factor), 3))
+            index = create_index(data, n_channel)
+            img = np.zeros((data.shape[0], data.shape[1], n_channel))
             for idx_z in range(dz):
-                for idx_c in range(3):
+                for idx_c in range(n_channel):
                     # img[:, :, idx_c] = zoom(nii_data[:, :, int(index[idx_z, idx_c])], zoom=resize_f)
                     img[:, :, idx_c] = nii_data[:, :, int(index[idx_z, idx_c])]
                 name2save = savepath+nii_name+"_{0:03d}".format(idx_z)+suffix+".npy"
