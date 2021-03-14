@@ -45,16 +45,16 @@ opt = parser.parse_args()
 gpus_list = range(opt.gpus)
 hostname = str(socket.gethostname())
 cudnn.benchmark = True
+dtype = torch.FloatTensor
 print(opt)
 
 def train(epoch):
     epoch_loss = 0
     model.train()
     for iteration, batch in enumerate(training_data_loader, 1):
-        input, target, bicubic = Variable(batch[0]), Variable(batch[1]), Variable(batch[2])
+        input, target, bicubic = Variable(batch[0], dtype=dtype), Variable(batch[1], dtype=dtype), Variable(batch[2], dtype=dtype)
         if cuda:
             input = input.cuda(gpus_list[0])
-            print(type(input))
             target = target.cuda(gpus_list[0])
             bicubic = bicubic.cuda(gpus_list[0])
 
