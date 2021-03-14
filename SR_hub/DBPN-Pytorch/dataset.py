@@ -19,7 +19,7 @@ def load_img(filepath):
     return img
 
 def rescale_img(img_in, scale):
-    size_in = img_in.size
+    print(img_in.shape)
     img_in = zoom(size_in, zoom=(scale, scale, 1))
     # new_size_in = tuple([int(x * scale) for x in size_in])
     # img_in = img_in.resize(new_size_in, resample=Image.BICUBIC)
@@ -84,6 +84,8 @@ class DatasetFromFolder(data.Dataset):
     def __getitem__(self, index):
         input = load_img(self.image_filenames[index][:-6]+"_X.npy")
         target = load_img(self.image_filenames[index][:-6]+"_Y.npy")
+        print(input.shape, self.image_filenames[index][:-6]+"_X.npy")
+        print(target.shape, self.image_filenames[index][:-6]+"_Y.npy")
         # input = target.resize((int(target.size[0]/self.upscale_factor),int(target.size[1]/self.upscale_factor)), Image.BICUBIC)       
         bicubic = rescale_img(input, self.upscale_factor)
         

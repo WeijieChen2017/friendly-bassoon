@@ -39,7 +39,7 @@ parser.add_argument('--patch_size', type=int, default=40, help='Size of cropped 
 parser.add_argument('--pretrained_sr', default='DBPN-RES-MR64-3_2x.pth', help='sr pretrained base model')
 parser.add_argument('--pretrained', type=bool, default=True)
 parser.add_argument('--save_folder', default='weights/', help='Location to save checkpoint models')
-parser.add_argument('--prefix', default='DBPN_2x', help='Location to save checkpoint models')
+parser.add_argument('--prefix', default='DBPNRES_2x', help='Location to save checkpoint models')
 
 opt = parser.parse_args()
 gpus_list = range(opt.gpus)
