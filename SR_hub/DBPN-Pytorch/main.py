@@ -55,6 +55,8 @@ def train(epoch):
         input = Variable(batch[0]).type(dtype)
         target = Variable(batch[1]).type(dtype)
         bicubic = Variable(batch[2]).type(dtype)
+
+        print("input, target, bicubic", input.size(), target.size(), bicubic.size())
         if cuda:
             input = input.cuda(gpus_list[0])
             target = target.cuda(gpus_list[0])
@@ -63,6 +65,7 @@ def train(epoch):
         optimizer.zero_grad()
         t0 = time.time()
         prediction = model(input)
+        print("prediction", prediction.size)
 
         if opt.residual:
             prediction = prediction + bicubic
