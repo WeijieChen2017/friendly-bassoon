@@ -52,7 +52,9 @@ def train(epoch):
     epoch_loss = 0
     model.train()
     for iteration, batch in enumerate(training_data_loader, 1):
-        input, target, bicubic = Variable(batch[0], dtype=dtype), Variable(batch[1], dtype=dtype), Variable(batch[2], dtype=dtype)
+        input = Variable(batch[0]).type(dtype)
+        target = Variable(batch[1]).type(dtype)
+        bicubic = Variable(batch[2]).type(dtype)
         if cuda:
             input = input.cuda(gpus_list[0])
             target = target.cuda(gpus_list[0])
