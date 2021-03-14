@@ -73,7 +73,7 @@ def main():
             for idx_z in range(dz):
                 for idx_c in range(n_channel):
                     # img[:, :, idx_c] = zoom(nii_data[:, :, int(index[idx_z, idx_c])], zoom=resize_f)
-                    img[:, :, idx_c] = nii_data[:, :, int(index[idx_z, idx_c])]
+                    img[:, :, idx_c] = data[:, :, int(index[idx_z, idx_c])]
                 name2save = savepath+nii_name+"_{0:03d}".format(idx_z)+suffix+".npy"
                 np.save(name2save, img)
             print("#"*20)
