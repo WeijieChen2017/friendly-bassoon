@@ -80,8 +80,8 @@ class DatasetFromFolder(data.Dataset):
         self.data_augmentation = data_augmentation
 
     def __getitem__(self, index):
-        input = load_img(self.image_filenames[index][:-4]+"_X.npy")
-        target = load_img(self.image_filenames[index][:-4]+"_Y.npy")
+        input = load_img(self.image_filenames[index][:-6]+"_X.npy")
+        target = load_img(self.image_filenames[index][:-6]+"_Y.npy")
         # input = target.resize((int(target.size[0]/self.upscale_factor),int(target.size[1]/self.upscale_factor)), Image.BICUBIC)       
         bicubic = rescale_img(input, self.upscale_factor)
         
@@ -108,7 +108,7 @@ class DatasetFromFolderEval(data.Dataset):
         self.transform = transform
 
     def __getitem__(self, index):
-        input = load_img(self.image_filenames[index][:-4]+"_X.npy")
+        input = load_img(self.image_filenames[index][:-6]+"_X.npy")
         _, file = os.path.split(self.image_filenames[index])
 
         bicubic = rescale_img(input, self.upscale_factor)
