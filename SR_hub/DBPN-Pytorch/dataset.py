@@ -25,17 +25,19 @@ def rescale_img(img_in, scale):
     return zoom(img_in, zoom=(scale, scale, 1))
 
 def get_patch(img_in, img_tar, img_bic, patch_size, scale, ix=-1, iy=-1):
-    [ih, iw, _] = img_in.shape
-    [th, tw] = [scale * ih, scale * iw]
+    img_x = img_in.shape[0]
+    img_y = img_in.shape[1]
+    tar_x = img_x * scale
+    tar_y = img_y * scale
 
     patch_mult = scale #if len(scale) > 1 else 1
     tp = patch_mult * patch_size
     ip = tp // scale
 
     if ix == -1:
-        ix = random.randrange(0, iw - ip + 1)
+        ix = random.randrange(0, img_x - ip + 1)
     if iy == -1:
-        iy = random.randrange(0, ih - ip + 1)
+        iy = random.randrange(0, img_y - ip + 1)
 
     [tx, ty] = [scale * ix, scale * iy]
 
