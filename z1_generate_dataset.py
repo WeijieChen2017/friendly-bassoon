@@ -49,7 +49,7 @@ def main():
         nii_data = np.asanyarray(nii_file.dataobj)
         nii_data_norm = maxmin_norm(nii_data)
         nii_smooth = processing.smooth_image(nii_file, fwhm=3, mode='nearest')
-        nii_smooth_zoom = zoom(nii_smooth, zoom=(1, 1, 1/2))
+        nii_smooth_zoom = zoom(np.asanyarray(nii_smooth.dataobj), zoom=(1, 1, 1/2))
         nii_smooth_zoom_norm = maxmin_norm(nii_smooth_zoom)
         print("nii_data_norm", nii_data_norm.shape)
         print("nii_smooth_zoom_norm", nii_smooth_zoom_norm.shape)
