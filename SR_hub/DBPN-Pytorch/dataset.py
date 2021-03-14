@@ -42,8 +42,8 @@ def get_patch(img_in, img_tar, img_bic, patch_size, scale, ix=-1, iy=-1):
     [tx, ty] = [scale * ix, scale * iy]
 
     img_in = img_in[ix:ix+ip, iy:iy+ip]
-    img_tar = img_tar[tx:tx+ip, ty:ty+tp]
-    img_bic = img_bic[tx:tx+ip, ty:ty+tp]
+    img_tar = img_tar[tx:tx+tp, ty:ty+tp]
+    img_bic = img_bic[tx:tx+tp, ty:ty+tp]
                 
     info_patch = {
         'ix': ix, 'iy': iy, 'ip': ip, 'tx': tx, 'ty': ty, 'tp': tp}
