@@ -64,7 +64,7 @@ def augment(img_in, img_tar, img_bic, flip_h=True, flip_v=True, rot=True):
         info_aug['flip_v'] = True
 
     if rot:
-        cnt_rot = int(random.random()//0.25):
+        cnt_rot = int(random.random()//0.25)
         for img in [img_in, img_tar, img_bic]:
             for idx_c in range(0):
                 img[:, :, idx_c] = np.rot90(img, cnt_rot)
