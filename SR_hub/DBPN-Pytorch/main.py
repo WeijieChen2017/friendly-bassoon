@@ -21,7 +21,7 @@ import time
 # Training settings
 parser = argparse.ArgumentParser(description='PyTorch Super Res Example')
 parser.add_argument('--upscale_factor', type=int, default=2, help="super resolution upscale factor")
-parser.add_argument('--batchSize', type=int, default=64, help='training batch size')
+parser.add_argument('--batchSize', type=int, default=48, help='training batch size')
 parser.add_argument('--nEpochs', type=int, default=2000, help='number of epochs to train for')
 parser.add_argument('--snapshots', type=int, default=50, help='Snapshots')
 parser.add_argument('--start_iter', type=int, default=1, help='Starting Epoch')
