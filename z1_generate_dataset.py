@@ -47,32 +47,34 @@ def main():
         nii_header = nii_file.header
         nii_affine = nii_file.affine
         nii_data = np.asanyarray(nii_file.dataobj)
-        # nii_data_norm = maxmin_norm(nii_data) * 255
+        nii_data_norm = maxmin_norm(nii_data)
         nii_smooth = processing.smooth_image(nii_file, fwhm=3, mode='nearest')
+        nii_smooth_zoom = zoom(nii_smooth, zoom=(1, 1, 1/2))
+        nii_smooth_zoom_norm = maxmin_norm(nii_smooth_zoom)
+        print("nii_data_norm", nii_data_norm.shape)
+        print("nii_smooth_zoom_norm", nii_smooth_zoom_norm.shape)
         # nii_smooth_norm = maxmin_norm(np.asanyarray(nii_smooth.dataobj)) * 255
 
         dx, dy, dz = nii_data.shape
-        save_path = "./results/"+name_dataset+"/"
-        save_path_smooth = "./results/"+name_dataset+"_smooth/"
-        for path in [save_path, save_path_smooth]:
+        save_path_X = "./z1/"+name_dataset+"/"
+        save_path_Y = "./z1/"+name_dataset+"/"
+        for path in [save_path_X, save_path_Y]:
             if not os.path.exists(path):
                 os.makedirs(path)
 
-        for package in [[nii_data, save_path, 2], [nii_smooth, save_path_smooth, 1/2]]:
+        for package in [[nii_data_norm, save_path_Y, "_Y"], [nii_smooth_zoom_norm, save_path_X, "_X"]]:
             data = package[0]
             savepath = package[1]
-            scale_factor = package[2]
+            suffix = package[2]
 
             index = create_index(data, 3)
             img = np.zeros((int(dx*scale_factor), int(dy*scale_factor), 3))
             for idx_z in range(dz):
                 for idx_c in range(3):
                     # img[:, :, idx_c] = zoom(nii_data[:, :, int(index[idx_z, idx_c])], zoom=resize_f)
-                    img[:, :, idx_c] = zoom(nii_data[:, :, int(index[idx_z, idx_c])], zoom=scale_factor)
-                name2save = savepath+nii_name+"_{0:03d}".format(idx_z)+".npy"
-                img = maxmin_norm(img) * 255.0
+                    img[:, :, idx_c] = nii_data[:, :, int(index[idx_z, idx_c])]
+                name2save = savepath+nii_name+"_{0:03d}".format(idx_z)+suffix+".npy"
                 np.save(name2save, img)
-                print(name2save, img.shape)
             print(str(idx_z)+" images have been saved.")
             print("#"*20)
 
