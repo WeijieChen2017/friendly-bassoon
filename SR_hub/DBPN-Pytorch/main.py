@@ -54,6 +54,7 @@ def train(epoch):
         input, target, bicubic = Variable(batch[0]), Variable(batch[1]), Variable(batch[2])
         if cuda:
             input = input.cuda(gpus_list[0])
+            print(type(input))
             target = target.cuda(gpus_list[0])
             bicubic = bicubic.cuda(gpus_list[0])
 
