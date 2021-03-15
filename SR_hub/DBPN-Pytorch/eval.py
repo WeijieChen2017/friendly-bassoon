@@ -16,7 +16,7 @@ from functools import reduce
 from scipy.misc import imsave
 import scipy.io as sio
 import time
-import cv2
+# import cv2
 
 # Training settings
 parser = argparse.ArgumentParser(description='PyTorch Super Res Example')
@@ -104,8 +104,9 @@ def save_img(img, img_name):
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
         
-    save_fn = save_dir +'/'+ img_name
-    cv2.imwrite(save_fn, cv2.cvtColor(save_img*255, cv2.COLOR_BGR2RGB),  [cv2.IMWRITE_PNG_COMPRESSION, 0])
+    save_fn = save_dir +'/'+ img_name +".npy"
+    np.save(save_fn, save_img)
+    # cv2.imwrite(save_fn, cv2.cvtColor(save_img*255, cv2.COLOR_BGR2RGB),  [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
 def x8_forward(img, model, precision='single'):
     def _transform(v, op):
