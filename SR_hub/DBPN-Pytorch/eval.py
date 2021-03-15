@@ -20,7 +20,7 @@ import cv2
 
 # Training settings
 parser = argparse.ArgumentParser(description='PyTorch Super Res Example')
-parser.add_argument('--upscale_factor', type=int, default=8, help="super resolution upscale factor")
+parser.add_argument('--upscale_factor', type=int, default=2, help="super resolution upscale factor")
 parser.add_argument('--testBatchSize', type=int, default=1, help='testing batch size')
 parser.add_argument('--gpu_mode', type=bool, default=True)
 parser.add_argument('--self_ensemble', type=bool, default=False)
@@ -30,10 +30,10 @@ parser.add_argument('--seed', type=int, default=123, help='random seed to use. D
 parser.add_argument('--gpus', default=1, type=int, help='number of gpu')
 parser.add_argument('--input_dir', type=str, default='Input')
 parser.add_argument('--output', default='Results/', help='Location to save checkpoint models')
-parser.add_argument('--test_dataset', type=str, default='Set5_LR_x8')
+parser.add_argument('--test_dataset', type=str, default='MRI_2x')
 parser.add_argument('--model_type', type=str, default='DBPNLL')
 parser.add_argument('--residual', type=bool, default=False)
-parser.add_argument('--model', default='models/DBPNLL_x8.pth', help='sr pretrained base model')
+parser.add_argument('--model', default='models/MRI_2xL1122-WCHENDBPN-RES-MR64-3DBPNRES_2x_epoch_29.pth', help='sr pretrained base model')
 
 opt = parser.parse_args()
 
