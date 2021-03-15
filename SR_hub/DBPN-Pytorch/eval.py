@@ -41,6 +41,8 @@ gpus_list=range(opt.gpus)
 print(opt)
 
 cuda = opt.gpu_mode
+dtype = torch.FloatTensor
+
 if cuda and not torch.cuda.is_available():
     raise Exception("No GPU found, please run without --cuda")
 
@@ -73,7 +75,9 @@ def eval():
     model.eval()
     for batch in testing_data_loader:
         with torch.no_grad():
-            input, bicubic, name = Variable(batch[0]), Variable(batch[1]), batch[2]
+            input = Variable(batch[0]).type(dtype)
+            bicubic = Variable(batch[1]).type(dtype)
+            name = batch[2]
         if cuda:
             input = input.cuda(gpus_list[0])
             bicubic = bicubic.cuda(gpus_list[0])
