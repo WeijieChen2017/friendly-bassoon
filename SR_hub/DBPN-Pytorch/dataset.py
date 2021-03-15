@@ -114,7 +114,7 @@ class DatasetFromFolderEval(data.Dataset):
         self.transform = transform
 
     def __getitem__(self, index):
-        input = load_img(self.image_filenames[index][:-6]+"_X.npy")
+        input = load_img(self.image_filenames[index]) #[:-6]+"_X.npy"
         _, file = os.path.split(self.image_filenames[index])
 
         bicubic = rescale_img(input, self.upscale_factor)
