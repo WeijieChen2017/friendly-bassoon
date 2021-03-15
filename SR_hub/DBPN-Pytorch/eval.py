@@ -31,7 +31,7 @@ parser.add_argument('--gpus', default=1, type=int, help='number of gpu')
 parser.add_argument('--input_dir', type=str, default='Input')
 parser.add_argument('--output', default='Results/', help='Location to save checkpoint models')
 parser.add_argument('--test_dataset', type=str, default='MRI_2x')
-parser.add_argument('--model_type', type=str, default='DBPNLL')
+parser.add_argument('--model_type', type=str, default='DBPN-RES-MR64-3')
 parser.add_argument('--residual', type=bool, default=False)
 parser.add_argument('--model', default='models/MRI_2xL1122-WCHENDBPN-RES-MR64-3DBPNRES_2x_epoch_29.pth', help='sr pretrained base model')
 
