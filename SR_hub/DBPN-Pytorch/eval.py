@@ -109,7 +109,7 @@ def save_img(img, img_name):
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
         
-    save_fn = save_dir +'/'+ img_name +".npy"
+    save_fn = save_dir +'/'+ img_name
     np.save(save_fn, save_img)
     # cv2.imwrite(save_fn, cv2.cvtColor(save_img*255, cv2.COLOR_BGR2RGB),  [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
