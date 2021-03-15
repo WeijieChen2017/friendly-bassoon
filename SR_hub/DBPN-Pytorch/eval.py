@@ -15,6 +15,7 @@ from functools import reduce
 
 from scipy.misc import imsave
 import scipy.io as sio
+import numpy as np
 import time
 # import cv2
 
