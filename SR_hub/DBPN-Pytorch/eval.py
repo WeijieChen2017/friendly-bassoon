@@ -103,7 +103,7 @@ def eval():
         save_img(prediction.cpu().data, name[0])
 
 def save_img(img, img_name):
-    save_img = img.squeeze().clamp(0, 1).numpy().transpose(1,2,0)
+    save_img = img.squeeze().clamp(-1, 1).numpy().transpose(1,2,0)
     # save img
     save_dir=os.path.join(opt.output,opt.test_dataset)
     if not os.path.exists(save_dir):
