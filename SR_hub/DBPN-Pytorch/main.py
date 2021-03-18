@@ -52,9 +52,9 @@ def train(epoch):
     epoch_loss = 0
     model.train()
     for iteration, batch in enumerate(training_data_loader, 1):
-        input = Variable(batch[0]).type(dtype) 256*256
-        target = Variable(batch[1]).type(dtype) 512*512
-        bicubic = Variable(batch[2]).type(dtype) zoom(input)
+        input = Variable(batch[0]).type(dtype)
+        target = Variable(batch[1]).type(dtype)
+        bicubic = Variable(batch[2]).type(dtype)
 
         # print("input, target, bicubic", input.size(), target.size(), bicubic.size())
         if cuda:
