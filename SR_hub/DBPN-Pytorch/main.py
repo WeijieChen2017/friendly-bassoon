@@ -20,7 +20,7 @@ import time
 
 # Training settings
 parser = argparse.ArgumentParser(description='PyTorch Super Res Example')
-parser.add_argument('--upscale_factor', type=int, default=2, help="super resolution upscale factor")
+parser.add_argument('--upscale_factor', type=int, default=4, help="super resolution upscale factor")
 parser.add_argument('--batchSize', type=int, default=48, help='training batch size')
 parser.add_argument('--nEpochs', type=int, default=100, help='number of epochs to train for')
 parser.add_argument('--snapshots', type=int, default=10, help='Snapshots')
@@ -32,14 +32,14 @@ parser.add_argument('--seed', type=int, default=123, help='random seed to use. D
 parser.add_argument('--gpus', default=1, type=int, help='number of gpu')
 parser.add_argument('--data_dir', type=str, default='./dataset')
 parser.add_argument('--data_augmentation', type=bool, default=True)
-parser.add_argument('--hr_train_dataset', type=str, default='MRI_2x')
+parser.add_argument('--hr_train_dataset', type=str, default='MRI_4x')
 parser.add_argument('--model_type', type=str, default='DBPN-RES-MR64-3')
 parser.add_argument('--residual', type=bool, default=True)
 parser.add_argument('--patch_size', type=int, default=40, help='Size of cropped HR image')
 parser.add_argument('--pretrained_sr', default='DBPN-RES-MR64-3_2x.pth', help='sr pretrained base model')
 parser.add_argument('--pretrained', type=bool, default=True)
 parser.add_argument('--save_folder', default='weights/', help='Location to save checkpoint models')
-parser.add_argument('--prefix', default='DBPNRES_2x', help='Location to save checkpoint models')
+parser.add_argument('--prefix', default='DBPNRES_4x', help='Location to save checkpoint models')
 
 opt = parser.parse_args()
 gpus_list = range(opt.gpus)
@@ -52,9 +52,9 @@ def train(epoch):
     epoch_loss = 0
     model.train()
     for iteration, batch in enumerate(training_data_loader, 1):
-        input = Variable(batch[0]).type(dtype)
-        target = Variable(batch[1]).type(dtype)
-        bicubic = Variable(batch[2]).type(dtype)
+        input = Variable(batch[0]).type(dtype) 256*256
+        target = Variable(batch[1]).type(dtype) 512*512
+        bicubic = Variable(batch[2]).type(dtype) zoom(input)
 
         # print("input, target, bicubic", input.size(), target.size(), bicubic.size())
         if cuda:
