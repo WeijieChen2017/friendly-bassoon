@@ -50,15 +50,15 @@ def main():
         nii_data = np.asanyarray(nii_file.dataobj)
         nii_data_norm = maxmin_norm(nii_data)
         nii_smooth = processing.smooth_image(nii_file, fwhm=3, mode='nearest')
-        nii_smooth_zoom = zoom(np.asanyarray(nii_smooth.dataobj), zoom=(1/4, 1/4, 1))
+        nii_smooth_zoom = zoom(np.asanyarray(nii_smooth.dataobj), zoom=(1/8, 1/8, 1))
         nii_smooth_zoom_norm = maxmin_norm(nii_smooth_zoom)
         print("nii_data_norm", nii_data_norm.shape)
         print("nii_smooth_zoom_norm", nii_smooth_zoom_norm.shape)
         # nii_smooth_norm = maxmin_norm(np.asanyarray(nii_smooth.dataobj)) * 255
 
         dx, dy, dz = nii_data.shape
-        save_path_X = "./z1_4x/"+name_dataset+"/"
-        save_path_Y = "./z1_4x/"+name_dataset+"/"
+        save_path_X = "./z1_8x/"+name_dataset+"/"
+        save_path_Y = "./z1_8x/"+name_dataset+"/"
         for path in [save_path_X, save_path_Y]:
             if not os.path.exists(path):
                 os.makedirs(path)
