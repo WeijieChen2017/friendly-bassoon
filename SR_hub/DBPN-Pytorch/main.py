@@ -42,7 +42,7 @@ parser.add_argument('--save_folder', default='weights/', help='Location to save 
 parser.add_argument('--prefix', default='DBPNRES_4x', help='Location to save checkpoint models')
 
 opt = parser.parse_args()
-gpus_list = range(opt.gpus)
+gpus_list = range(1, 2)
 print(gpus_list)
 # gpus_list = [0, 1]
 hostname = str(socket.gethostname())
