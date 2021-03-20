@@ -29,7 +29,7 @@ parser.add_argument('--lr', type=float, default=1e-4, help='Learning Rate. Defau
 parser.add_argument('--gpu_mode', type=bool, default=True)
 parser.add_argument('--threads', type=int, default=1, help='number of threads for data loader to use')
 parser.add_argument('--seed', type=int, default=123, help='random seed to use. Default=123')
-parser.add_argument('--gpus', default=1, type=int, help='number of gpu')
+parser.add_argument('--gpus', default=2, type=int, help='number of gpu')
 parser.add_argument('--data_dir', type=str, default='./dataset')
 parser.add_argument('--data_augmentation', type=bool, default=True)
 parser.add_argument('--hr_train_dataset', type=str, default='MRI_8x')
@@ -42,8 +42,9 @@ parser.add_argument('--save_folder', default='weights/', help='Location to save 
 parser.add_argument('--prefix', default='DBPNRES_8x', help='Location to save checkpoint models')
 
 opt = parser.parse_args()
-# gpus_list = range(opt.gpus)
-gpus_list = [0, 1]
+gpus_list = range(opt.gpus)
+print(gpus_list)
+# gpus_list = [0, 1]
 hostname = str(socket.gethostname())
 cudnn.benchmark = True
 dtype = torch.FloatTensor
