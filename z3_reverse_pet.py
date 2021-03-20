@@ -62,10 +62,10 @@ def main():
         # enhance
         power_hub = [0.5,1,2,3]
         for power in power_hub:
-            norm_mri_p = nii_data_norm ** powerFactor
+            norm_mri_p = nii_data_norm ** power
             norm_mri_p = maxmin_norm(norm_mri_p)
             file_inv = nib.Nifti1Image(norm_mri_p, nii_file.affine, nii_file.header)
-            save_name = save_path+nii_name+"_invp"+str(powerFactor)+".nii"
+            save_name = save_path+nii_name+"_invp"+str(power)+".nii"
             nib.save(file_inv, save_name)
             
         print(save_name)
