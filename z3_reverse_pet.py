@@ -65,7 +65,7 @@ def main():
             norm_mri_p = nii_data_norm ** power
             norm_mri_p = maxmin_norm(norm_mri_p)
             file_inv = nib.Nifti1Image(norm_mri_p, nii_file.affine, nii_file.header)
-            save_name = save_path+nii_name+"_invp"+str(power)+".nii"
+            save_name = save_path+nii_name+"_invp"+str(power)+".nii.gz"
             nib.save(file_inv, save_name)
             print(save_name)
         # norm_mri[otsu_data>0] = 255-norm_mri[otsu_data>0]
