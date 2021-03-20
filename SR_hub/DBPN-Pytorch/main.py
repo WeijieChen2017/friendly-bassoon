@@ -43,7 +43,7 @@ parser.add_argument('--prefix', default='DBPNRES_8x', help='Location to save che
 
 opt = parser.parse_args()
 # gpus_list = range(opt.gpus)
-gpu_list = [0, 1]
+gpus_list = [0, 1]
 hostname = str(socket.gethostname())
 cudnn.benchmark = True
 dtype = torch.FloatTensor
