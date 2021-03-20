@@ -55,7 +55,7 @@ def main():
         nii_data_norm[nii_data_norm == 1] = 0
 
         save_path = "./z3/"+name_dataset+"/"
-        for path in [save_path_X, save_path_Y]:
+        for path in [save_path]:
             if not os.path.exists(path):
                 os.makedirs(path)
 
