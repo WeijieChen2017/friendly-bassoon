@@ -67,8 +67,7 @@ def main():
             file_inv = nib.Nifti1Image(norm_mri_p, nii_file.affine, nii_file.header)
             save_name = save_path+nii_name+"_invp"+str(power)+".nii"
             nib.save(file_inv, save_name)
-            
-        print(save_name)
+            print(save_name)
         # norm_mri[otsu_data>0] = 255-norm_mri[otsu_data>0]
         
         # cut_th_0 = 100
@@ -85,26 +84,6 @@ def main():
         # print("nii_data_norm", nii_data_norm.shape)
         # print("nii_smooth_zoom_norm", nii_smooth_zoom_norm.shape)
         # nii_smooth_norm = maxmin_norm(np.asanyarray(nii_smooth.dataobj)) * 255
-
-
-
-        for package in [[nii_data_norm, save_path_Y, "_Y"], [nii_smooth_zoom_norm, save_path_X, "_X"]]:
-            data = package[0]
-            savepath = package[1]
-            suffix = package[2]
-
-            index = create_index(data, n_channel)
-            img = np.zeros((data.shape[0], data.shape[1], n_channel))
-            for idx_z in range(dz):
-                for idx_c in range(n_channel):
-                    # img[:, :, idx_c] = zoom(nii_data[:, :, int(index[idx_z, idx_c])], zoom=resize_f)
-                    img[:, :, idx_c] = data[:, :, int(index[idx_z, idx_c])]
-                name2save = savepath+nii_name+"_{0:03d}".format(idx_z)+suffix+".npy"
-                np.save(name2save, img)
-            print("#"*20)
-            print("Last:", savepath+nii_name+"_{0:03d}".format(idx_z)+suffix+".npy")
-            print(str(idx_z)+" images have been saved.")
-            
 
 if __name__ == "__main__":
     main()
