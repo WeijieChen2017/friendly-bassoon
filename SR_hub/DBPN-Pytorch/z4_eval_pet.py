@@ -44,7 +44,7 @@ def main():
 
     for model_path in model_list:
         up_factor = int(model_path[:-15]) 
-        weight_name = os.path.basename(model_path) '--model'
+        weight_name = os.path.basename(model_path)
         command = "python eval.py"
         command += " --upscale_factor "
         command += up_factor
