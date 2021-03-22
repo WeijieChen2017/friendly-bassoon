@@ -47,7 +47,7 @@ def main():
         weight_name = os.path.basename(model_path)
         command = "python eval.py"
         command += " --upscale_factor "
-        command += up_factor
+        command += str(up_factor)
         command += " --model "
         command += "weights/"+weight_name
         print(command)
