@@ -30,7 +30,7 @@ def main():
         description='''This is a beta script for Partial Volume Correction in PET/MRI system. ''',
         epilog="""All's well that ends well.""")
 
-    parser.add_argument('--nameDataset', metavar='', type=str, default="pet",
+    parser.add_argument('--nameDataset', metavar='', type=str, default="pet_nii",
                         help='Name for the dataset needed to be sliced.(pet)<str>')
 
     args = parser.parse_args()
@@ -51,24 +51,43 @@ def main():
         command += " --model "
         command += "weights/"+weight_name
         print(command)
+        # os.system(command)
+
+    for nii_path in nii_list:
+        print("@"*60)
+        print(nii_path)
+        nii_file = nib.load(nii_path)
+        nii_name = os.path.basename(nii_path)
+        nii_name = nii_name[:nii_name.find(".")]
+        nii_header = nii_file.header
+        nii_affine = nii_file.affine
+        nii_data = np.asanyarray(nii_file.dataobj)
+        nii_data = zoom(nii_data, scale=(1, 1, 3))
+        nii_data_norm = maxmin_norm(nii_data)
+
+        save_path = "./Input/pet/"
+        for path in [save_path]:
+            if not os.path.exists(path):
+                os.makedirs(path)
+
+        for package in [[nii_data_norm, save_path, "_113"]]:
+            data = package[0]
+            savepath = package[1]
+            suffix = package[2]
+
+            index = create_index(data, n_channel)
+            img = np.zeros((data.shape[0], data.shape[1], n_channel))
+            for idx_z in range(dz):
+                for idx_c in range(n_channel):
+                    # img[:, :, idx_c] = zoom(nii_data[:, :, int(index[idx_z, idx_c])], zoom=resize_f)
+                    img[:, :, idx_c] = data[:, :, int(index[idx_z, idx_c])]
+                name2save = savepath+nii_name+"_{0:03d}".format(idx_z)+suffix+".npy"
+                np.save(name2save, img)
+            print("#"*20)
+            print("Last:", savepath+nii_name+"_{0:03d}".format(idx_z)+suffix+".npy")
+            print(str(idx_z)+" images have been saved.")
 
 
-    # for nii_path in nii_list:
-    #     print("@"*60)
-    #     print(nii_path)
-    #     nii_file = nib.load(nii_path)
-    #     nii_name = os.path.basename(nii_path)
-    #     nii_name = nii_name[:nii_name.find(".")]
-    #     nii_header = nii_file.header
-    #     nii_affine = nii_file.affine
-    #     nii_data = np.asanyarray(nii_file.dataobj)
-    #     nii_data = zoom(nii_data, scale=(1, 1, 3))
-    #     nii_data_norm = maxmin_norm(nii_data)
-
-    #     save_path = "./z4/"+name_dataset+"/"
-    #     for path in [save_path]:
-    #         if not os.path.exists(path):
-    #             os.makedirs(path)
 
 
 
