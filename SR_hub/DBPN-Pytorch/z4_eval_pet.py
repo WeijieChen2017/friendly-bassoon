@@ -62,7 +62,7 @@ def main():
         nii_header = nii_file.header
         nii_affine = nii_file.affine
         nii_data = np.asanyarray(nii_file.dataobj)
-        nii_data = zoom(nii_data, scale=(1, 1, 3))
+        nii_data = zoom(nii_data, zoom=(1, 1, 3))
         nii_data_norm = maxmin_norm(nii_data)
 
         save_path = "./Input/pet/"
