@@ -64,7 +64,8 @@ def main():
         nii_data = np.asanyarray(nii_file.dataobj)
         nii_data = zoom(nii_data, zoom=(1, 1, 3))
         nii_data_norm = maxmin_norm(nii_data)
-
+        
+        dx, dy, dz = nii_data_norm.shape
         save_path = "./Input/pet/"
         for path in [save_path]:
             if not os.path.exists(path):
