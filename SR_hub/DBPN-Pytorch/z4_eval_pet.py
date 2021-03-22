@@ -35,7 +35,7 @@ def main():
 
     args = parser.parse_args()
     name_dataset = args.nameDataset
-    nii_list = glob.glob("./eval/"+name_dataset+"/*.nii")+glob.glob("./eval/"+name_dataset+"/*.nii.gz")
+    nii_list = glob.glob("./Input/"+name_dataset+"/*.nii")+glob.glob("./Input/"+name_dataset+"/*.nii.gz")
     nii_list.sort()
     n_channel = 3
 
