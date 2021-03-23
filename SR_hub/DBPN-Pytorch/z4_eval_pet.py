@@ -51,40 +51,37 @@ def main():
         command += " --model "
         command += "weights/"+weight_name
         print(command)
-        os.system(command)
+        # os.system(command)
 
-    # for nii_path in nii_list:
-    #     print("@"*60)
-    #     print(nii_path)
-    #     nii_file = nib.load(nii_path)
-    #     nii_name = os.path.basename(nii_path)
-    #     nii_name = nii_name[:nii_name.find(".")]
-    #     nii_header = nii_file.header
-    #     nii_affine = nii_file.affine
-    #     nii_data = np.asanyarray(nii_file.dataobj)
+        for nii_path in nii_list:
+            print("@"*60)
+            print(nii_path)
+            nii_file = nib.load(nii_path)
+            nii_name = os.path.basename(nii_path)
+            nii_name = nii_name[:nii_name.find(".")]
+            nii_header = nii_file.header
+            nii_affine = nii_file.affine
+            nii_data = np.asanyarray(nii_file.dataobj)
 
-    #     dx, dy, dz = nii_data_norm.shape
-    #     save_path = "./Input/pet/"
-    #     for path in [save_path]:
-    #         if not os.path.exists(path):
-    #             os.makedirs(path)
+            dx, dy, dz = nii_data.shape
+            curr_data = np.zeros((dx, dy, dz*3))
+            save_path = "./eval/"+weight_name+"/"
+            for path in [save_path]:
+                if not os.path.exists(path):
+                    os.makedirs(path)
 
-    #     for package in [[nii_data_norm, save_path, "_113"]]:
-    #         data = package[0]
-    #         savepath = package[1]
-    #         suffix = package[2]
+            for idx_z in range(dz*3):
+                curr_path = "./Results/pet/"+nii_name+"_{0:03d}".format(idx_z)+"_113.npy"
+                curr_img = np.load(curr_path)
+                curr_data[:, :, idx_z] = curr_img[:, :, curr_img.shape[2]//2]            
+            
+            pvc_data = zoom(curr_data, zoom=(1, 1, 1/3))
+            pvc_sum = np.sum(pvc_data)
+            pvc_data = pvc_data / pvc_sum * np.sum(nii_data)
 
-    #         index = create_index(data, n_channel)
-    #         img = np.zeros((data.shape[0], data.shape[1], n_channel))
-    #         for idx_z in range(dz):
-    #             for idx_c in range(n_channel):
-    #                 # img[:, :, idx_c] = zoom(nii_data[:, :, int(index[idx_z, idx_c])], zoom=resize_f)
-    #                 img[:, :, idx_c] = data[:, :, int(index[idx_z, idx_c])]
-    #             name2save = savepath+nii_name+"_{0:03d}".format(idx_z)+suffix+".npy"
-    #             np.save(name2save, img)
-    #         print("#"*20)
-    #         print("Last:", savepath+nii_name+"_{0:03d}".format(idx_z)+suffix+".npy")
-    #         print(str(idx_z)+" images have been saved.")
+            pvc_file = nib.Nifti1Image(pvc_data, nii_affine, nii_header)
+            nib.save(pvc_file, save_path+nii_name+".nii.gz")
+            print(save_path+nii_name+".nii.gz")
 
 
 
