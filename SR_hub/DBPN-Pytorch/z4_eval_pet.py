@@ -73,7 +73,7 @@ def main():
             for idx_z in range(dz*3):
                 curr_path = "./Results/pet/"+nii_name+"_{0:03d}".format(idx_z)+"_113.npy"
                 curr_img = np.load(curr_path)
-                curr_data[:, :, idx_z] = zoom(curr_img[:, :, curr_img.shape[2]//2], zoom=(1/up_factor, 1/up_factor))            
+                curr_data[:, :, idx_z] = zoom(curr_img[:, :, curr_img.shape[2]//2], zoom=(1/8, 1/8))            
             
             pvc_data = zoom(curr_data, zoom=(1, 1, 1/3))
             pvc_sum = np.sum(pvc_data)
