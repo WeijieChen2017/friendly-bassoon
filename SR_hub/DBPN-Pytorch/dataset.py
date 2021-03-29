@@ -1,4 +1,5 @@
 import torch.utils.data as data
+import nibabel as nib
 import torch
 import numpy as np
 import os
@@ -10,7 +11,7 @@ from random import randrange
 from scipy.ndimage import zoom
 
 def is_image_file(filename):
-    return any(filename.endswith(extension) for extension in [".png", ".jpg", ".jpeg", ".npy"])
+    return any(filename.endswith(extension) for extension in [".png", ".jpg", ".jpeg", ".npy", ".nii.gz"])
 
 def load_img(filepath):
     # img = Image.open(filepath).convert('RGB')
@@ -125,5 +126,45 @@ class DatasetFromFolderEval(data.Dataset):
             
         return input, bicubic, file
       
+    def __len__(self):
+        return len(self.image_filenames)
+
+
+class NiftyDatasetFromFolder(data.Dataset):
+    def __init__(self, image_dir, patch_size, upscale_factor, data_augmentation, transform=None):
+        super(NiftyDatasetFromFolder, self).__init__()
+        self.image_filenames = [join(image_dir, x) for x in listdir(image_dir) if is_image_file(x)]
+        self.patch_size = patch_size
+        self.upscale_factor = upscale_factor
+        self.transform = transform
+        self.data_augmentation = data_augmentation
+
+    def __getitem__(self, index):
+        origin_nii = nib.load(self.image_filenames[index][:-11]+"_1f3.nii.gz").get_fdata()
+        target_nii = nib.load(self.image_filenames[index][:-11]+"_250.nii.gz").get_fdata()
+        bicubic_nii = nib.load(self.image_filenames[index][:-11]+"_25f.nii.gz").get_fdata()
+
+        cntz = origin.shape[2]
+        iz = random.randrange(1, cntz-1)
+        origin = origin_nii[:, :, iz-1:iz+1]
+        target = target_nii[:, :, iz-1:iz+1]
+        bicubic = bicubic_nii[:, :, iz-1+iz+1]
+        # print(input.shape, self.image_filenames[index][:-6]+"_X.npy")
+        # print(target.shape, self.image_filenames[index][:-6]+"_Y.npy")
+        # input = target.resize((int(target.size[0]/self.upscale_factor),int(target.size[1]/self.upscale_factor)), Image.BICUBIC)       
+        # bicubic = rescale_img(origin, self.upscale_factor)
+        
+        origin, target, bicubic, _ = get_patch(origin,target,bicubic,self.patch_size, self.upscale_factor)
+        
+        if self.data_augmentation:
+            origin, target, bicubic, _ = augment(origin, target, bicubic)
+        
+        if self.transform:
+            origin = self.transform(origin)
+            bicubic = self.transform(bicubic)
+            target = self.transform(target)
+                
+        return origin, target, bicubic
+
     def __len__(self):
         return len(self.image_filenames)
