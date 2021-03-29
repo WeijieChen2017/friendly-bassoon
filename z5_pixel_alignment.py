@@ -20,7 +20,11 @@ for mri_path in mri_list:
     print(save_name)
     
     mri_smooth = nib.processing.smooth_image(mri_file_4x, fwhm=3)
-    mri_smooth_1x = nib.processing.conform(mri_smooth, out_shape=(240, 240, 284), voxel_size=(1, 1, 0.6))
+    save_name = mri_dir + mri_name + "_25f.nii.gz"
+    nib.save(mri_smooth, save_name)
+    print(save_name)
+    
+    mri_smooth_1x = nib.processing.conform(mri_smooth, out_shape=(240, 240, 71), voxel_size=(1, 1, 2.4))
     save_name = mri_dir + mri_name + "_1f3.nii.gz"
     nib.save(mri_smooth_1x, save_name)
     print(save_name)
