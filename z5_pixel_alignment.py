@@ -30,7 +30,7 @@ for mri_path in mri_list:
     mri_smooth_1x = nib.processing.conform(mri_smooth, out_shape=(240, 240, 71), voxel_size=(1, 1, 2.4))
     save_name = mri_dir + mri_name + "_1f3.nii.gz"
 
-    for package in [[mri_file_4x, "250"], [mri_smooth, "25f"], [mri_smooth_1x, "1f3"]]
+    for package in [[mri_file_4x, "250"], [mri_smooth, "25f"], [mri_smooth_1x, "1f3"]]:
         nii_file = package[0]
         tag = package[1]
 
