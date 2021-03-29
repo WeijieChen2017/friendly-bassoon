@@ -146,9 +146,9 @@ class NiftyDatasetFromFolder(data.Dataset):
 
         cntz = origin_nii.shape[2]
         iz = random.randrange(1, cntz-1)
-        origin = origin_nii[:, :, iz-1:iz+1]
-        target = target_nii[:, :, iz-1:iz+1]
-        bicubic = bicubic_nii[:, :, iz-1+iz+1]
+        origin = origin_nii[:, :, iz-1:iz+2]
+        target = target_nii[:, :, iz-1:iz+2]
+        bicubic = bicubic_nii[:, :, iz-1+iz+2]
         # print(input.shape, self.image_filenames[index][:-6]+"_X.npy")
         # print(target.shape, self.image_filenames[index][:-6]+"_Y.npy")
         # input = target.resize((int(target.size[0]/self.upscale_factor),int(target.size[1]/self.upscale_factor)), Image.BICUBIC)       
