@@ -25,7 +25,10 @@ for pet_path in pet_list:
     pet_1x = nib.processing.conform(pet_file, out_shape=(300, 300, 103), voxel_size=(1, 1, 2.4))
     save_name = pet_dir + pet_name + "_100.nii.gz"
 
-    for package in [[pet_1x, "100"]]:
+    pet_4x = nib.processing.conform(pet_file, out_shape=(1200, 1200, 103), voxel_size=(0.25, 0.25, 2.4))
+    save_name = pet_dir + pet_name + "_250.nii.gz"
+
+    for package in [[pet_1x, "100"], [pet_4x, "250"]]:
         nii_file = package[0]
         tag = package[1]
 
