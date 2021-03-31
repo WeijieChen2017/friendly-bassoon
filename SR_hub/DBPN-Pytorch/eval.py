@@ -15,9 +15,27 @@ from functools import reduce
 
 from scipy.misc import imsave
 import scipy.io as sio
+import nibabel as nib
 import numpy as np
 import time
 # import cv2
+
+def maxmin_norm(data):
+    MAX = np.amax(data)
+    MIN = np.amin(data)
+    data = (data - MIN)/(MAX-MIN)
+    return data
+
+def create_index(dataA, n_slice):
+    h, w, z = dataA.shape
+    index = np.zeros((z,n_slice))
+    
+    for idx_z in range(z):
+        for idx_c in range(n_slice):
+            index[idx_z, idx_c] = idx_z-(n_slice-idx_c+1)+n_slice//2+2
+    index[index<0]=0
+    index[index>z-1]=z-1
+    return index
 
 # Training settings
 parser = argparse.ArgumentParser(description='PyTorch Super Res Example')
@@ -75,32 +93,75 @@ if cuda:
 def eval():
     model.eval()
     for batch in testing_data_loader:
-        with torch.no_grad():
-            input = Variable(batch[0]).type(dtype)
-            bicubic = Variable(batch[1]).type(dtype)
-            name = batch[2]
-        if cuda:
-            input = input.cuda(gpus_list[0])
-            bicubic = bicubic.cuda(gpus_list[0])
 
-        t0 = time.time()
-        if opt.chop_forward:
+        input_nii = batch[0] # nifty format
+        bicubic_nii = batch[1]
+        name = batch[2]
+        n_channel = 3
+
+        templ_header = input_nii.header
+        templ_affine = input_nii.affine
+        xy1200_data = input_nii.get_fdata()
+        xy1200_norm = maxmin_norm(xy1200_data)
+        xy300_norm = maxmin_norm(bicubic_nii.get_fdata())
+        pet_recon = np.zeros(xy1200_data.shape)
+        pet_diff = np.zeros(xy1200_data.shape)
+        pet_z = xy300_norm.shape()
+        index = create_index(dataA=xy300_norm, n_channel=n_channel)
+
+        xy300_slice = np.zeros((xy300_norm.shape[0], xy300_norm.shape[1], 3))
+        xy1200_slice = np.zeros((xy1200_norm.shape[0], xy1200_norm.shape[1], 3))
+        for idx_z in range(pet_z):
+            for idx_c in range(n_channel):
+                xy300_slice[:, :, idx_c] = xy300_norm[:, :, int(index[idx_z, idx_c])]
+                xy1200_slice[:, :, idx_c] = xy1200_norm[:, :, int(index[idx_z, idx_c])]
+
             with torch.no_grad():
-                prediction = chop_forward(input, model, opt.upscale_factor)
-        else:
-            if opt.self_ensemble:
-                with torch.no_grad():
-                    prediction = x8_forward(input, model)
-            else:
-                with torch.no_grad():
-                    prediction = model(input)
+                input = Variable(xy300_slice).type(dtype)
+                bicubic = Variable(xy1200_slice).type(dtype)
                 
-        if opt.residual:
-            prediction = prediction + bicubic
+            if cuda:
+                input = input.cuda(gpus_list[0])
+                bicubic = bicubic.cuda(gpus_list[0])
 
-        t1 = time.time()
-        print("===> Processing: %s || Timer: %.4f sec." % (name[0], (t1 - t0)))
-        save_img(prediction.cpu().data, name[0])
+            t0 = time.time()
+            if opt.chop_forward:
+                with torch.no_grad():
+                    prediction = chop_forward(input, model, opt.upscale_factor)
+            else:
+                if opt.self_ensemble:
+                    with torch.no_grad():
+                        prediction = x8_forward(input, model)
+                else:
+                    with torch.no_grad():
+                        prediction = model(input)
+            
+            # pet_diff[:, :, idx_z] = prediction
+            pet_recon[:, :, idx_z] = prediction + bicubic
+
+            # if opt.residual:
+            #     prediction = prediction + bicubic
+
+            t1 = time.time()
+            print("===> Processing: %s || Timer: %.4f sec." % (str(idx_z), (t1 - t0)))
+
+        sum_recon = np.sum(pet_recon)
+        pet_recon = pet_recon / sum_recon * np.sum(xy1200_data)
+        pet_diff = np.subtract(xy1200_data - pet_recon)
+
+        save_dir = os.path.join(opt.output,opt.test_dataset)
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir)
+            
+        save_fn = save_dir +'/'+ name[0]
+        recon_file = nib.Nifti1Image(pet_recon, templ_affine, templ_header)
+        diff_file = nib.Nifti1Image(pet_diff, templ_affine, templ_header)
+        nib.save(recon_file, save_fn + "_recon.nii.gz")
+        nib.save(diff_file, save_fn + "_diff.nii.gz")
+        print(save_fn + "_recon.nii.gz")
+        print(save_fn + "_diff.nii.gz")
+
+        # save_img(prediction.cpu().data, name[0])
 
 def save_img(img, img_name):
     save_img = img.squeeze().clamp(-1, 1).numpy().transpose(1,2,0)

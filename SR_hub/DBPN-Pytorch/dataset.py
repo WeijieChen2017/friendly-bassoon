@@ -10,6 +10,9 @@ import random
 from random import randrange
 from scipy.ndimage import zoom
 
+
+
+
 def is_image_file(filename):
     return any(filename.endswith(extension) for extension in [".png", ".jpg", ".jpeg", ".npy", ".nii.gz"])
 
@@ -166,5 +169,30 @@ class NiftyDatasetFromFolder(data.Dataset):
                 
         return origin, target, bicubic
 
+    def __len__(self):
+        return len(self.image_filenames)
+
+
+class NiftyDatasetFromFolderEval(data.Dataset):
+    def __init__(self, lr_dir, upscale_factor, transform=None):
+        super(DatasetFromFolderEval, self).__init__()
+        self.image_filenames = [join(lr_dir, x) for x in listdir(lr_dir) if is_image_file(x)]
+        self.upscale_factor = upscale_factor
+        self.transform = transform
+
+    def __getitem__(self, index):
+        input = nib.load(self.image_filenames[index][:-11]+"_250.nii.gz") # 1200
+        bicubic = nib.load(self.image_filenames[index][:-11]+"_100.nii.gz") # 300
+        # input = load_img(self.image_filenames[index]) #[:-6]+"_X.npy"
+        _, file = os.path.split(self.image_filenames[index][:-11])
+
+        # bicubic = rescale_img(input, self.upscale_factor)
+        
+        # if self.transform:
+        #     input = self.transform(input)
+        #     bicubic = self.transform(bicubic)
+
+        return input, bicubic, file
+      
     def __len__(self):
         return len(self.image_filenames)
