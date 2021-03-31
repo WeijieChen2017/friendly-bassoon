@@ -1,6 +1,6 @@
 from os.path import join
 from torchvision.transforms import Compose, ToTensor
-from dataset import DatasetFromFolderEval, DatasetFromFolder, NiftyDatasetFromFolder
+from dataset import DatasetFromFolderEval, DatasetFromFolder, NiftyDatasetFromFolder, NiftyDatasetFromFolderEval
 
 def transform():
     return Compose([
@@ -13,6 +13,6 @@ def get_training_set(data_dir, hr, upscale_factor, patch_size, data_augmentation
                              transform=transform())
 
 def get_eval_set(lr_dir, upscale_factor):
-    return DatasetFromFolderEval(lr_dir, upscale_factor,
+    return NiftyDatasetFromFolderEval(lr_dir, upscale_factor,
                              transform=transform())
 
