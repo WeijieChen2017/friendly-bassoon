@@ -122,17 +122,17 @@ def eval():
         index = create_index(dataA=xy300_norm, n_slice=n_channel)
 
         xy300_slice = np.zeros((1, 3, xy300_norm.shape[0], xy300_norm.shape[1]))
-        xy1200_slice = np.zeros((1, 3, xy1200_norm.shape[0], xy1200_norm.shape[1]))
+        # xy1200_slice = np.zeros((xy1200_norm.shape[0], xy1200_norm.shape[1], 1))
         for idx_z in range(pet_z):
             for idx_c in range(n_channel):
                 xy300_slice[0, idx_c, :, :] = xy300_norm[:, :, int(index[idx_z, idx_c])]
-                xy1200_slice[0, idx_c, :, :] = xy1200_norm[:, :, int(index[idx_z, idx_c])]
+                # xy1200_slice[idx_c, :, :] = xy1200_norm[:, :, int(index[idx_z, idx_c])]
 
             with torch.no_grad():
                 input = torch.cuda.FloatTensor(xy300_slice)
-                bicubic = torch.cuda.FloatTensor(xy1200_slice)
+                # bicubic = torch.cuda.FloatTensor(xy1200_slice)
                 input = Variable(input)
-                bicubic = Variable(input)
+                # bicubic = Variable(input)
 
             # if cuda:
             #     input = input.cuda(gpus_list[0])
@@ -149,9 +149,9 @@ def eval():
                 else:
                     with torch.no_grad():
                         prediction = model(input)
-            
-            # pet_diff[:, :, idx_z] = prediction
-            pet_recon[:, :, idx_z] = np.asarray(prediction) + bicubic
+
+            prediction = np.asarray(prediction.cpu())
+            pet_recon[:, :, idx_z] = np.squeeze(prediction[:, 1, :, :]) + xy1200_norm[:, :, idx_z]
 
             # if opt.residual:
             #     prediction = prediction + bicubic
