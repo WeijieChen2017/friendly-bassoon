@@ -129,12 +129,12 @@ def eval():
                 xy1200_slice[:, :, idx_c] = xy1200_norm[:, :, int(index[idx_z, idx_c])]
 
             with torch.no_grad():
-                input = Variable(xy300_slice).type(dtype)
-                bicubic = Variable(xy1200_slice).type(dtype)
+                input = torch.cuda.FloatTensor(xy300_slice)
+                bicubic = torch.cuda.FloatTensor(xy1200_slice)
                 
-            if cuda:
-                input = input.cuda(gpus_list[0])
-                bicubic = bicubic.cuda(gpus_list[0])
+            # if cuda:
+            #     input = input.cuda(gpus_list[0])
+            #     bicubic = bicubic.cuda(gpus_list[0])
 
             t0 = time.time()
             if opt.chop_forward:
@@ -149,7 +149,7 @@ def eval():
                         prediction = model(input)
             
             # pet_diff[:, :, idx_z] = prediction
-            pet_recon[:, :, idx_z] = prediction + bicubic
+            pet_recon[:, :, idx_z] = np.asarray(prediction) + bicubic
 
             # if opt.residual:
             #     prediction = prediction + bicubic
