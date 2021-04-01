@@ -94,8 +94,8 @@ if cuda:
 def eval():
     model.eval()
 
-    pet_list = glob.glob(os.path.join(opt.input_dir,opt.test_dataset)+"/*.nii.gz")
-    print(os.path.join(opt.input_dir,opt.test_dataset)+"/*.nii.gz")
+    pet_list = glob.glob(os.path.join(opt.input_dir,opt.test_dataset)+"/*_100.nii.gz")
+    # print(os.path.join(opt.input_dir,opt.test_dataset)+"/*.nii.gz")
     pet_list.sort()
 
     for pet_path in pet_list:
