@@ -103,7 +103,7 @@ def eval():
         print(pet_path)
         input_nii = nib.load(pet_path[:-11]+"_250.nii.gz") # 1200
         bicubic_nii = nib.load(pet_path[:-11]+"_100.nii.gz") # 300
-        _, name = os.path.split(self.image_filenames[index][:-11])
+        _, name = os.path.split(pet_path[:-11])
     # for batch in testing_data_loader:
 
         # input_nii = batch[0] # nifty format
