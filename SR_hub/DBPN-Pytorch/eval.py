@@ -131,7 +131,9 @@ def eval():
             with torch.no_grad():
                 input = torch.cuda.FloatTensor(xy300_slice)
                 bicubic = torch.cuda.FloatTensor(xy1200_slice)
-                
+                input = Variable(input)
+                bicubic = Variable(input)
+
             # if cuda:
             #     input = input.cuda(gpus_list[0])
             #     bicubic = bicubic.cuda(gpus_list[0])
