@@ -95,10 +95,12 @@ def eval():
     model.eval()
 
     pet_list = glob.glob(os.path.join(opt.input_dir,opt.test_dataset)+"*.nii.gz")
+    print(os.path.join(opt.input_dir,opt.test_dataset)+"*.nii.gz")
     pet_list.sort()
 
     for pet_path in pet_list:
-
+        print("&"*60)
+        print(pet_path)
         input_nii = nib.load(pet_path[:-11]+"_250.nii.gz") # 1200
         bicubic_nii = nib.load(pet_path[:-11]+"_100.nii.gz") # 300
         _, name = os.path.split(self.image_filenames[index][:-11])
