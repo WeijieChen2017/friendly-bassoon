@@ -121,12 +121,12 @@ def eval():
         pet_z = xy300_norm.shape[2]
         index = create_index(dataA=xy300_norm, n_slice=n_channel)
 
-        xy300_slice = np.zeros((xy300_norm.shape[0], xy300_norm.shape[1], 3))
-        xy1200_slice = np.zeros((xy1200_norm.shape[0], xy1200_norm.shape[1], 3))
+        xy300_slice = np.zeros((1, 3, xy300_norm.shape[0], xy300_norm.shape[1]))
+        xy1200_slice = np.zeros((1, 3, xy1200_norm.shape[0], xy1200_norm.shape[1]))
         for idx_z in range(pet_z):
             for idx_c in range(n_channel):
-                xy300_slice[:, :, idx_c] = xy300_norm[:, :, int(index[idx_z, idx_c])]
-                xy1200_slice[:, :, idx_c] = xy1200_norm[:, :, int(index[idx_z, idx_c])]
+                xy300_slice[0, idx_c, :, :] = xy300_norm[0, int(index[idx_z, idx_c]), :, :]
+                xy1200_slice[0, idx_c, :, :] = xy1200_norm[0, int(index[idx_z, idx_c]), :, :]
 
             with torch.no_grad():
                 input = torch.cuda.FloatTensor(xy300_slice)
