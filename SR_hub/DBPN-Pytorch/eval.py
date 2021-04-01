@@ -151,7 +151,7 @@ def eval():
                         prediction = model(input)
 
             prediction = np.asarray(prediction.cpu())
-            pet_recon[:, :, idx_z] = np.squeeze(prediction[:, 1, :, :]) + xy1200_norm[:, :, idx_z]
+            pet_diff[:, :, idx_z] = np.squeeze(prediction[:, 1, :, :])
 
             # if opt.residual:
             #     prediction = prediction + bicubic
@@ -159,9 +159,9 @@ def eval():
             t1 = time.time()
             print("===> Processing: %s || Timer: %.4f sec." % (str(idx_z), (t1 - t0)))
 
-        sum_recon = np.sum(pet_recon)
-        pet_recon = pet_recon / sum_recon * np.sum(xy1200_data)
-        pet_diff = np.subtract(xy1200_data, pet_recon)
+        # sum_recon = np.sum(pet_recon)
+        # pet_recon = pet_recon / sum_recon * np.sum(xy1200_data)
+        pet_recon = xy1200_data + pet_diff
 
         save_dir = os.path.join(opt.output,opt.test_dataset)
         if not os.path.exists(save_dir):
