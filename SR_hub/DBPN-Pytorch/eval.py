@@ -18,6 +18,7 @@ import scipy.io as sio
 import nibabel as nib
 import numpy as np
 import time
+import glob
 # import cv2
 
 def maxmin_norm(data):
@@ -70,8 +71,8 @@ if cuda:
     torch.cuda.manual_seed(opt.seed)
 
 print('===> Loading datasets')
-test_set = get_eval_set(os.path.join(opt.input_dir,opt.test_dataset), opt.upscale_factor)
-testing_data_loader = DataLoader(dataset=test_set, num_workers=opt.threads, batch_size=opt.testBatchSize, shuffle=False)
+# test_set = get_eval_set(os.path.join(opt.input_dir,opt.test_dataset), opt.upscale_factor)
+# testing_data_loader = DataLoader(dataset=test_set, num_workers=opt.threads, batch_size=opt.testBatchSize, shuffle=False)
 
 print('===> Building model')
 if opt.model_type == 'DBPNLL':
@@ -92,11 +93,20 @@ if cuda:
 
 def eval():
     model.eval()
-    for batch in testing_data_loader:
 
-        input_nii = batch[0] # nifty format
-        bicubic_nii = batch[1]
-        name = batch[2]
+    pet_list = glob.glob(os.path.join(opt.input_dir,opt.test_dataset)+"*.nii.gz")
+    pet_list.sort()
+
+    for pet_path in pet_list:
+
+        input_nii = nib.load(pet_path[:-11]+"_250.nii.gz") # 1200
+        bicubic_nii = nib.load(pet_path[:-11]+"_100.nii.gz") # 300
+        _, name = os.path.split(self.image_filenames[index][:-11])
+    # for batch in testing_data_loader:
+
+        # input_nii = batch[0] # nifty format
+        # bicubic_nii = batch[1]
+        # name = batch[2]
         n_channel = 3
 
         templ_header = input_nii.header
