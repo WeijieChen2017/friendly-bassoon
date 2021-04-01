@@ -161,7 +161,7 @@ def eval():
 
         sum_recon = np.sum(pet_recon)
         pet_recon = pet_recon / sum_recon * np.sum(xy1200_data)
-        pet_diff = np.subtract(xy1200_data - pet_recon)
+        pet_diff = np.subtract(xy1200_data, pet_recon)
 
         save_dir = os.path.join(opt.output,opt.test_dataset)
         if not os.path.exists(save_dir):
