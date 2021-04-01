@@ -125,8 +125,8 @@ def eval():
         xy1200_slice = np.zeros((1, 3, xy1200_norm.shape[0], xy1200_norm.shape[1]))
         for idx_z in range(pet_z):
             for idx_c in range(n_channel):
-                xy300_slice[0, idx_c, :, :] = xy300_norm[0, int(index[idx_z, idx_c]), :, :]
-                xy1200_slice[0, idx_c, :, :] = xy1200_norm[0, int(index[idx_z, idx_c]), :, :]
+                xy300_slice[0, idx_c, :, :] = xy300_norm[:, :, int(index[idx_z, idx_c])]
+                xy1200_slice[0, idx_c, :, :] = xy1200_norm[:, :, int(index[idx_z, idx_c])]
 
             with torch.no_grad():
                 input = torch.cuda.FloatTensor(xy300_slice)
