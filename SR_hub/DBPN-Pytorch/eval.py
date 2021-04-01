@@ -167,7 +167,7 @@ def eval():
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
             
-        save_fn = save_dir +'/'+ name[0]
+        save_fn = save_dir +'/'+ name
         recon_file = nib.Nifti1Image(pet_recon, templ_affine, templ_header)
         diff_file = nib.Nifti1Image(pet_diff, templ_affine, templ_header)
         nib.save(recon_file, save_fn + "_recon.nii.gz")
