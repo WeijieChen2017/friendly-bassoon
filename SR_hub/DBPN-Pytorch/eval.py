@@ -118,7 +118,7 @@ def eval():
         xy300_norm = maxmin_norm(bicubic_nii.get_fdata())
         pet_recon = np.zeros(xy1200_data.shape)
         pet_diff = np.zeros(xy1200_data.shape)
-        pet_z = xy300_norm.shape()
+        pet_z = xy300_norm.shape[2]
         index = create_index(dataA=xy300_norm, n_channel=n_channel)
 
         xy300_slice = np.zeros((xy300_norm.shape[0], xy300_norm.shape[1], 3))
