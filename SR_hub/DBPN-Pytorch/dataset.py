@@ -175,7 +175,7 @@ class NiftyDatasetFromFolder(data.Dataset):
 
 class NiftyDatasetFromFolderEval(data.Dataset):
     def __init__(self, lr_dir, upscale_factor, transform=None):
-        super(DatasetFromFolderEval, self).__init__()
+        super(NiftyDatasetFromFolderEval, self).__init__()
         self.image_filenames = [join(lr_dir, x) for x in listdir(lr_dir) if is_image_file(x)]
         self.upscale_factor = upscale_factor
         self.transform = transform
