@@ -22,15 +22,19 @@ for mri_path in mri_list:
     
     mri_file = nib.load(mri_path)
     mri_file_4x = nib.processing.conform(mri_file, out_shape=(960, 960, 284), voxel_size=(0.25, 0.25, 0.6))
-    save_name = mri_dir + mri_name + "_250.nii.gz"
+    save_name = mri_dir + mri_name + "_x960y960z284.nii.gz"
+
+    mri_file_xy4x = nib.processing.conform(mri_file, out_shape=(960, 960, 71), voxel_size=(0.25, 0.25, 2.4))
+    save_name = mri_dir + mri_name + "_x960y960z71.nii.gz"
     
     mri_smooth = nib.processing.smooth_image(mri_file_4x, fwhm=3)
-    save_name = mri_dir + mri_name + "_25f.nii.gz"
+    save_name = mri_dir + mri_name + "_x960y960z284f3.nii.gz"
     
     mri_smooth_1x = nib.processing.conform(mri_smooth, out_shape=(240, 240, 71), voxel_size=(1, 1, 2.4))
-    save_name = mri_dir + mri_name + "_1f3.nii.gz"
+    save_name = mri_dir + mri_name + "_x240y240z71f3.nii.gz"
 
-    for package in [[mri_file_4x, "250"], [mri_smooth, "25f"], [mri_smooth_1x, "1f3"]]:
+    for package in [[mri_file_4x, "x960y960z284"], [mri_smooth, "_x960y960z284f3"],
+                    [mri_smooth_1x, "_x240y240z71f3"], [mri_file_xy4x, "_x960y960z71"]]:
         nii_file = package[0]
         tag = package[1]
 
