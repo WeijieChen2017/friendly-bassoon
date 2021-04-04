@@ -103,8 +103,8 @@ def eval():
     for pet_path in pet_list:
         print("&"*60)
         print(pet_path)
-        input_nii = nib.load(pet_path[:-11]+"_250.nii.gz") # 1200
-        bicubic_nii = nib.load(pet_path[:-11]+"_25f.nii.gz") # 300
+        input_nii = nib.load(pet_path[:-11]+"_x960y960z71.nii.gz") # 1200
+        bicubic_nii = nib.load(pet_path[:-11]+"_x960y960z71f3.nii.gz") # 300
         _, name = os.path.split(pet_path[:-11])
     # for batch in testing_data_loader:
 
@@ -118,7 +118,7 @@ def eval():
         xy1200_data = input_nii.get_fdata()
         xy1200_norm = maxmin_norm(xy1200_data)
         xy300_norm = maxmin_norm(bicubic_nii.get_fdata())
-        # pet_recon = np.zeros(xy1200_data.shape)
+        pet_recon = np.zeros(xy1200_data.shape)
         pet_diff = np.zeros(xy1200_data.shape)
         pet_z = xy300_norm.shape[2]
         index = create_index(dataA=xy300_norm, n_slice=n_channel)
@@ -165,18 +165,18 @@ def eval():
 
         # sum_recon = np.sum(pet_recon)
         # pet_recon = pet_recon / sum_recon * np.sum(xy1200_data)
-        # pet_recon = xy1200_data + pet_diff
+        pet_recon = xy1200_data + pet_diff
 
         save_dir = os.path.join(opt.output,opt.test_dataset)
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
             
         save_fn = save_dir +'/'+ name
-        # recon_file = nib.Nifti1Image(pet_recon, templ_affine, templ_header)
+        recon_file = nib.Nifti1Image(pet_recon, templ_affine, templ_header)
         diff_file = nib.Nifti1Image(pet_diff, templ_affine, templ_header)
-        # nib.save(recon_file, save_fn + "_recon.nii.gz")
+        nib.save(recon_file, save_fn + "_recon.nii.gz")
         nib.save(diff_file, save_fn + "_diff.nii.gz")
-        # print(save_fn + "_recon.nii.gz")
+        print(save_fn + "_recon.nii.gz")
         print(save_fn + "_diff.nii.gz")
 
         # save_img(prediction.cpu().data, name[0])
