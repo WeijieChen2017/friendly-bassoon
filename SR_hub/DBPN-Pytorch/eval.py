@@ -50,7 +50,7 @@ parser.add_argument('--seed', type=int, default=123, help='random seed to use. D
 parser.add_argument('--gpus', default=1, type=int, help='number of gpu')
 parser.add_argument('--input_dir', type=str, default='Input')
 parser.add_argument('--output', default='Results/', help='Location to save checkpoint models')
-parser.add_argument('--test_dataset', type=str, default='pet_100')
+parser.add_argument('--test_dataset', type=str, default='25f')
 parser.add_argument('--model_type', type=str, default='DBPN-RES-MR64-3')
 parser.add_argument('--residual', type=bool, default=False)
 parser.add_argument('--model', default='weights/Mar27L1122-WCHENDBPN-RES-MR64-3NIFTY_4x_epoch_999.pth', help='sr pretrained base model')
@@ -94,7 +94,7 @@ if cuda:
 def eval():
     model.eval()
 
-    pet_list = glob.glob(os.path.join(opt.input_dir,opt.test_dataset)+"/*_100.nii.gz")
+    pet_list = glob.glob(os.path.join(opt.input_dir,opt.test_dataset)+"/*_25f.nii.gz")
     # print(os.path.join(opt.input_dir,opt.test_dataset)+"/*.nii.gz")
     pet_list.sort()
 
@@ -102,7 +102,7 @@ def eval():
         print("&"*60)
         print(pet_path)
         input_nii = nib.load(pet_path[:-11]+"_250.nii.gz") # 1200
-        bicubic_nii = nib.load(pet_path[:-11]+"_100.nii.gz") # 300
+        bicubic_nii = nib.load(pet_path[:-11]+"_25f.nii.gz") # 300
         _, name = os.path.split(pet_path[:-11])
     # for batch in testing_data_loader:
 
