@@ -22,7 +22,7 @@ import time
 parser = argparse.ArgumentParser(description='PyTorch Super Res Example')
 parser.add_argument('--upscale_factor', type=int, default=4, help="super resolution upscale factor")
 parser.add_argument('--batchSize', type=int, default=4, help='training batch size')
-parser.add_argument('--nEpochs', type=int, default=1000, help='number of epochs to train for')
+parser.add_argument('--nEpochs', type=int, default=200, help='number of epochs to train for')
 parser.add_argument('--snapshots', type=int, default=100, help='Snapshots')
 parser.add_argument('--start_iter', type=int, default=1, help='Starting Epoch')
 parser.add_argument('--lr', type=float, default=1e-4, help='Learning Rate. Default=0.01')
@@ -39,7 +39,7 @@ parser.add_argument('--patch_size', type=int, default=40, help='Size of cropped 
 parser.add_argument('--pretrained_sr', default='DBPN-RES-MR64-3_4x.pth', help='sr pretrained base model')
 parser.add_argument('--pretrained', type=bool, default=True)
 parser.add_argument('--save_folder', default='weights/', help='Location to save checkpoint models')
-parser.add_argument('--prefix', default='NIFTY_4x', help='Location to save checkpoint models')
+parser.add_argument('--prefix', default='NIFTY_4x_NOINV', help='Location to save checkpoint models')
 
 opt = parser.parse_args()
 gpus_list = range(opt.gpus)
