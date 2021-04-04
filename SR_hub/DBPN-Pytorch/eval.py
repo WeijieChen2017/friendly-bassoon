@@ -142,20 +142,20 @@ def eval():
             #     input = input.cuda(gpus_list[0])
             #     bicubic = bicubic.cuda(gpus_list[0])
 
-            t0 = time.time()
-            if opt.chop_forward:
-                with torch.no_grad():
-                    prediction = chop_forward(input, model, opt.upscale_factor)
-            else:
-                if opt.self_ensemble:
+                t0 = time.time()
+                if opt.chop_forward:
                     with torch.no_grad():
-                        prediction = x8_forward(input, model)
+                        prediction = chop_forward(input, model, opt.upscale_factor)
                 else:
-                    with torch.no_grad():
-                        prediction = model(input)
+                    if opt.self_ensemble:
+                        with torch.no_grad():
+                            prediction = x8_forward(input, model)
+                    else:
+                        with torch.no_grad():
+                            prediction = model(input)
 
-            prediction = np.asarray(prediction.cpu())
-            pet_diff[:, :, idx_z] = np.squeeze(prediction[:, 1, :, :])
+                prediction = np.asarray(prediction.cpu())
+                pet_diff[:, :, idx_z] = np.squeeze(prediction[:, 1, :, :])
 
             # if opt.residual:
             #     prediction = prediction + bicubic
