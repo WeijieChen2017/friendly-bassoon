@@ -122,8 +122,8 @@ def eval():
         pet_diff = np.zeros(xy1200_data.shape)
         pet_z = xy300_norm.shape[2]
         index = create_index(dataA=xy300_norm, n_slice=n_channel)
-
         xy300_slice = np.zeros((1, 3, xy300_norm.shape[0], xy300_norm.shape[1]))
+        print(xy300_slice.shape)
         # xy1200_slice = np.zeros((xy1200_norm.shape[0], xy1200_norm.shape[1], 1))
         for idx_z in range(pet_z):
             # print(idx_z)
