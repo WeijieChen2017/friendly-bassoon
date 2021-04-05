@@ -154,9 +154,6 @@ class NiftyDatasetFromFolder(data.Dataset):
         # input_nii = nib.load(self.image_filenames[index][:-11]+"_x240y240z71f3.nii.gz").get_fdata()
         # target_nii = nib.load(self.image_filenames[index][:-11]+"_x960y960z71.nii.gz").get_fdata()
         # bicubic_nii = nib.load(self.image_filenames[index][:-11]+"_x960y960z71f3.nii.gz").get_fdata()
-
-        print(input_nii.shape, target_nii.shape, bicubic_nii.shape)
-
         cntz = input_nii.shape[2]
         iz = random.randrange(1, cntz-1)
         input = input_nii[:, :, iz-1:iz+2]
