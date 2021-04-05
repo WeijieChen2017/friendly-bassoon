@@ -143,9 +143,16 @@ class NiftyDatasetFromFolder(data.Dataset):
         self.data_augmentation = data_augmentation
 
     def __getitem__(self, index):
-        input_nii = nib.load(self.image_filenames[index][:-11]+"_1f3.nii.gz").get_fdata()
-        target_nii = nib.load(self.image_filenames[index][:-11]+"_250.nii.gz").get_fdata()
-        bicubic_nii = nib.load(self.image_filenames[index][:-11]+"_25f.nii.gz").get_fdata()
+        train_hub = ["s1bp1", "s1bp2", "s1b", "s1s", "s2c", "s2s", "s3b", "s3s", "s3c"]
+        n_dataset = len(train_hub)
+        idx = random.randrange(0, n_dataset)
+        input_nii = nib.load(train_hub[idx]+"_x240y240z71f3.nii.gz").get_fdata()
+        target_nii = nib.load(train_hub[idx]+"_x960y960z71.nii.gz").get_fdata()
+        bicubic_nii = nib.load(train_hub[idx]+"_x960y960z71f3.nii.gz").get_fdata()
+
+        # input_nii = nib.load(self.image_filenames[index][:-11]+"_x240y240z71f3.nii.gz").get_fdata()
+        # target_nii = nib.load(self.image_filenames[index][:-11]+"_x960y960z71.nii.gz").get_fdata()
+        # bicubic_nii = nib.load(self.image_filenames[index][:-11]+"_x960y960z71f3.nii.gz").get_fdata()
 
         print(input_nii.shape, target_nii.shape, bicubic_nii.shape)
 
