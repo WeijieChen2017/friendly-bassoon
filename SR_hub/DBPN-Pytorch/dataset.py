@@ -158,6 +158,7 @@ class NiftyDatasetFromFolder(data.Dataset):
         print(input_nii.shape, target_nii.shape, bicubic_nii.shape)
 
         cntz = input_nii.shape[2]
+        print(cntz)
         iz = random.randrange(1, cntz-1)
         input = input_nii[:, :, iz-1:iz+2]
         target = target_nii[:, :, iz-1:iz+2]
