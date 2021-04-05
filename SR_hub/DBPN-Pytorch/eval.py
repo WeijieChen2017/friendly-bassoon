@@ -50,10 +50,10 @@ parser.add_argument('--seed', type=int, default=123, help='random seed to use. D
 parser.add_argument('--gpus', default=1, type=int, help='number of gpu')
 parser.add_argument('--input_dir', type=str, default='Input')
 parser.add_argument('--output', default='Results/', help='Location to save checkpoint models')
-parser.add_argument('--test_dataset', type=str, default='25f')
+parser.add_argument('--test_dataset', type=str, default='pet_100')
 parser.add_argument('--model_type', type=str, default='DBPN-RES-MR64-3')
 parser.add_argument('--residual', type=bool, default=False)
-parser.add_argument('--model', default='weights/Mar27L1122-WCHENDBPN-RES-MR64-3NIFTY_4x_NOINV_epoch_199.pth', help='sr pretrained base model')
+parser.add_argument('--model', default='weights/z71L1122-WCHENDBPN-RES-MR64-3Z71_INV_epoch_199.pth', help='sr pretrained base model')
 
 opt = parser.parse_args()
 
@@ -103,8 +103,8 @@ def eval():
     for pet_path in pet_list:
         print("&"*60)
         print(pet_path)
-        input_nii = nib.load(pet_path[:-11]+"_x960y960z71.nii.gz") # 1200
-        bicubic_nii = nib.load(pet_path[:-11]+"_x240y240z71f3.nii.gz") # 300
+        input_nii = nib.load(pet_path[:-11]+"_100.nii.gz") # 1200
+        bicubic_nii = nib.load(pet_path[:-11]+"_250.nii.gz") # 300
         _, name = os.path.split(pet_path[:-11])
     # for batch in testing_data_loader:
 
