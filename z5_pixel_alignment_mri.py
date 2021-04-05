@@ -21,20 +21,16 @@ for mri_path in mri_list:
     mri_dir = os.path.dirname(mri_path)+"/"
     
     mri_file = nib.load(mri_path)
-    mri_file_4x = nib.processing.conform(mri_file, out_shape=(960, 960, 284), voxel_size=(0.25, 0.25, 0.6))
-    save_name = mri_dir + mri_name + "_x960y960z284.nii.gz"
+    file_1 = nib.processing.conform(mri_file, out_shape=(960, 960, 71), voxel_size=(0.25, 0.25, 2.4))
+    name_1 = "x960y960z71"
     
-    mri_smooth = nib.processing.smooth_image(mri_file_4x, fwhm=3)
-    save_name = mri_dir + mri_name + "_x960y960z284f3.nii.gz"
-
-    mri_file_xy4x_smooth = nib.processing.conform(mri_smooth, out_shape=(960, 960, 71), voxel_size=(0.25, 0.25, 2.4))
-    save_name = mri_dir + mri_name + "_x960y960z71.nii.gz"
+    file_2 = nib.processing.smooth_image(file_1, fwhm=3)
+    name_2 = "x960y960z71f3"
     
-    mri_smooth_1x = nib.processing.conform(mri_smooth, out_shape=(240, 240, 71), voxel_size=(1, 1, 2.4))
-    save_name = mri_dir + mri_name + "_x240y240z71f3.nii.gz"
+    file_3 = nib.processing.conform(file_2, out_shape=(240, 240, 71), voxel_size=(1, 1, 2.4))
+    name_3 = "x240y240z71f3"
 
-    for package in [[mri_file_4x, "x960y960z284"], [mri_smooth, "x960y960z284f3"],
-                    [mri_smooth_1x, "x240y240z71f3"], [mri_file_xy4x_smooth, "x960y960z71f3"]]:
+    for package in [[file_1, name_1], [file_2, name_2], [file_3, name_3]]:
         nii_file = package[0]
         tag = package[1]
 
