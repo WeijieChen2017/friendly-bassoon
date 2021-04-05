@@ -143,13 +143,15 @@ class NiftyDatasetFromFolder(data.Dataset):
         self.data_augmentation = data_augmentation
 
     def __getitem__(self, index):
-        origin_nii = nib.load(self.image_filenames[index][:-11]+"_1f3.nii.gz").get_fdata()
+        input_nii = nib.load(self.image_filenames[index][:-11]+"_1f3.nii.gz").get_fdata()
         target_nii = nib.load(self.image_filenames[index][:-11]+"_250.nii.gz").get_fdata()
         bicubic_nii = nib.load(self.image_filenames[index][:-11]+"_25f.nii.gz").get_fdata()
 
-        cntz = origin_nii.shape[2]
+        print(input_nii.shape, target_nii.shape, bicubic_nii.shape)
+
+        cntz = input_nii.shape[2]
         iz = random.randrange(1, cntz-1)
-        origin = origin_nii[:, :, iz-1:iz+2]
+        input = input_nii[:, :, iz-1:iz+2]
         target = target_nii[:, :, iz-1:iz+2]
         bicubic = bicubic_nii[:, :, iz-1+iz+2]
         # print(input.shape, self.image_filenames[index][:-6]+"_X.npy")
@@ -157,17 +159,17 @@ class NiftyDatasetFromFolder(data.Dataset):
         # input = target.resize((int(target.size[0]/self.upscale_factor),int(target.size[1]/self.upscale_factor)), Image.BICUBIC)       
         # bicubic = rescale_img(origin, self.upscale_factor)
         
-        origin, target, bicubic, _ = get_patch(origin,target,bicubic,self.patch_size, self.upscale_factor)
+        input, target, bicubic, _ = get_patch(input,target,bicubic,self.patch_size, self.upscale_factor)
         
         if self.data_augmentation:
-            origin, target, bicubic, _ = augment(origin, target, bicubic)
+            input, target, bicubic, _ = augment(input, target, bicubic)
         
         if self.transform:
-            origin = self.transform(origin)
+            input = self.transform(input)
             bicubic = self.transform(bicubic)
             target = self.transform(target)
                 
-        return origin, target, bicubic
+        return input, target, bicubic
 
     def __len__(self):
         return len(self.image_filenames)
