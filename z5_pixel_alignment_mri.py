@@ -19,8 +19,9 @@ for mri_path in mri_list:
     mri_name = os.path.basename(mri_path)
     mri_name = mri_name[:mri_name.find(".")]
     mri_dir = os.path.dirname(mri_path)+"/"
-    
     mri_file = nib.load(mri_path)
+    scale_factor = np.amax(mri_file.get_fdata())
+    
     file_1 = nib.processing.conform(mri_file, out_shape=(960, 960, 71), voxel_size=(0.25, 0.25, 2.4))
     name_1 = "x960y960z71"
     
@@ -34,7 +35,7 @@ for mri_path in mri_list:
         nii_file = package[0]
         tag = package[1]
 
-        nii_new_file = nib.Nifti1Image(maxmin_norm(nii_file.get_fdata()), nii_file.affine, nii_file.header)
+        nii_new_file = nib.Nifti1Image(nii_file.get_fdata()/scale_factor, nii_file.affine, nii_file.header)
         save_name = mri_dir + mri_name + "_" + tag + ".nii.gz"
         nib.save(nii_new_file, save_name)
         print(save_name)
