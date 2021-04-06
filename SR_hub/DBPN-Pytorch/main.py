@@ -18,6 +18,8 @@ import pdb
 import socket
 import time
 
+import nibabel as nib
+
 # Training settings
 parser = argparse.ArgumentParser(description='PyTorch Super Res Example')
 parser.add_argument('--upscale_factor', type=int, default=4, help="super resolution upscale factor")
