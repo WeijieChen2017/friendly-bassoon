@@ -54,12 +54,43 @@ print(opt)
 def train(epoch):
     epoch_loss = 0
     model.train()
-    for iteration, batch in enumerate(training_data_loader, 1):
-        input = Variable(batch[0]).type(dtype)
-        target = Variable(batch[1]).type(dtype)
-        bicubic = Variable(batch[2]).type(dtype)
 
-        # print("input, target, bicubic", input.size(), target.size(), bicubic.size())
+    train_hub = ["s1bp1", "s1bp2", "s1b", "s1s", "s2c", "s2s", "s3b", "s3s", "s3c"]
+    image_dir = "./dataset/z71/"
+    n_dataset = len(train_hub)
+    for idx_t in range(n_dataset):
+    
+        input_nii = nib.load(image_dir+train_hub[idx_t]+"_x240y240z71f3.nii.gz").get_fdata()
+        target_nii = nib.load(image_dir+train_hub[idx_t]+"_x960y960z71.nii.gz").get_fdata()
+        bicubic_nii = nib.load(image_dir+train_hub[idx_t]+"_x960y960z71f3.nii.gz").get_fdata()
+
+        cntz = input_nii.shape[2]
+        input_batch = np.zeros((opt.batchSize, 3, opt.patch_size, opt.patch_size))
+        target_batch = np.zeros((opt.batchSize, 3, opt.patch_size*opt.upscale_factor, opt.patch_size*opt.upscale_factor))
+        bicubic_batch = np.zeros((opt.batchSize, 3, opt.patch_size*opt.upscale_factor, opt.patch_size*opt.upscale_factor))
+        
+        for idx_b in range(opt.batchSize):
+            iz = random.randrange(1, cntz-1)
+            input = input_nii[:, :, iz-1:iz+2]
+            target = target_nii[:, :, iz-1:iz+2]
+            bicubic = bicubic_nii[:, :, iz-1:iz+2]
+
+            input, target, bicubic, _ = get_patch(input,target,bicubic, opt.patch_size, opt.upscale_factor)
+            input, target, bicubic, _ = augment(input, target, bicubic)
+
+            for idx_c in range(3):
+                input_batch[idx_b, idx_c, :, :] = input[:, :, idx_c]
+                target_batch[idx_b, idx_c, :, :] = target[:, :, idx_c]
+                bicubic_batch[idx_b, idx_c, :, :] = bicubic[:, :, idx_c]
+
+        input = torch.cuda.FloatTensor(input_batch)
+        target = torch.cuda.FloatTensor(target_batch)
+        bicubic = torch.cuda.FloatTensor(bicubic_batch)
+        
+        input = Variable(input)
+        target = Variable(target)
+        bicubic = Variable(bicubic)
+            
         if cuda:
             input = input.cuda(gpus_list[0])
             target = target.cuda(gpus_list[0])
@@ -79,9 +110,40 @@ def train(epoch):
         loss.backward()
         optimizer.step()
 
-        print("===> Epoch[{}]({}/{}): Loss: {:.4f} || Timer: {:.4f} sec.".format(epoch, iteration, len(training_data_loader), loss.data, (t1 - t0)))
+        print("===> Epoch[{}]({}/{}): Loss: {:.4f} || Timer: {:.4f} sec.".format(epoch, idx_t, n_dataset, loss.data, (t1 - t0)))
 
-    print("===> Epoch {} Complete: Avg. Loss: {:.4f}".format(epoch, epoch_loss / len(training_data_loader)))
+    print("===> Epoch {} Complete: Avg. Loss: {:.4f}".format(epoch, epoch_loss / n_dataset))
+
+
+
+    # for iteration, batch in enumerate(training_data_loader, 1):
+    #     input = Variable(batch[0]).type(dtype)
+    #     target = Variable(batch[1]).type(dtype)
+    #     bicubic = Variable(batch[2]).type(dtype)
+
+    #     # print("input, target, bicubic", input.size(), target.size(), bicubic.size())
+    #     if cuda:
+    #         input = input.cuda(gpus_list[0])
+    #         target = target.cuda(gpus_list[0])
+    #         bicubic = bicubic.cuda(gpus_list[0])
+
+    #     optimizer.zero_grad()
+    #     t0 = time.time()
+    #     prediction = model(input)
+    #     # print("prediction", prediction.size())
+
+    #     if opt.residual:
+    #         prediction = prediction + bicubic
+
+    #     loss = criterion(prediction, target)
+    #     t1 = time.time()
+    #     epoch_loss += loss.data
+    #     loss.backward()
+    #     optimizer.step()
+
+    #     print("===> Epoch[{}]({}/{}): Loss: {:.4f} || Timer: {:.4f} sec.".format(epoch, iteration, len(training_data_loader), loss.data, (t1 - t0)))
+
+    # print("===> Epoch {} Complete: Avg. Loss: {:.4f}".format(epoch, epoch_loss / len(training_data_loader)))
 
 
 def test():
@@ -161,3 +223,53 @@ for epoch in range(opt.start_iter, opt.nEpochs + 1):
             
     if (epoch+1) % (opt.snapshots) == 0:
         checkpoint(epoch)
+
+def get_patch(img_in, img_tar, img_bic, patch_size, scale, ix=-1, iy=-1):
+    img_x = img_in.shape[0]
+    img_y = img_in.shape[1]
+    tar_x = img_x * scale
+    tar_y = img_y * scale
+
+    patch_mult = scale #if len(scale) > 1 else 1
+    tp = patch_mult * patch_size
+    ip = tp // scale
+
+    if ix == -1:
+        ix = random.randrange(0, img_x - ip + 1)
+    if iy == -1:
+        iy = random.randrange(0, img_y - ip + 1)
+
+    [tx, ty] = [scale * ix, scale * iy]
+
+    img_in = img_in[ix:ix+ip, iy:iy+ip]
+    img_tar = img_tar[tx:tx+tp, ty:ty+tp]
+    img_bic = img_bic[tx:tx+tp, ty:ty+tp]
+                
+    info_patch = {
+        'ix': ix, 'iy': iy, 'ip': ip, 'tx': tx, 'ty': ty, 'tp': tp}
+
+    return img_in, img_tar, img_bic, info_patch
+
+def augment(img_in, img_tar, img_bic, flip_h=True, flip_v=True, rot=True):
+    info_aug = {'flip_h': False, 'flip_v': False, 'trans': False}
+    
+    if random.random() < 0.5 and flip_h:
+        for img in [img_in, img_tar, img_bic]:
+            for idx_c in range(0):
+                img[:, :, idx_c] = np.fliplr(img)
+        info_aug['flip_h'] = True
+
+    if random.random() < 0.5 and flip_v:
+        for img in [img_in, img_tar, img_bic]:
+            for idx_c in range(0):
+                img[:, :, idx_c] = np.flipup(img)
+        info_aug['flip_v'] = True
+
+    if rot:
+        cnt_rot = int(random.random()//0.25)
+        for img in [img_in, img_tar, img_bic]:
+            for idx_c in range(0):
+                img[:, :, idx_c] = np.rot90(img, cnt_rot)
+        info_aug['trans'] = True
+            
+    return img_in, img_tar, img_bic, info_aug
