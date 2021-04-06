@@ -20,6 +20,7 @@ import time
 
 import nibabel as nib
 import numpy as np
+import random
 
 # Training settings
 parser = argparse.ArgumentParser(description='PyTorch Super Res Example')
