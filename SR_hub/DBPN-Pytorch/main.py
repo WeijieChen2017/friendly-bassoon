@@ -44,7 +44,7 @@ parser.add_argument('--pretrained_sr', default='DBPN-RES-MR64-3_4x.pth', help='s
 # parser.add_argument('--pretrained_sr', default='DBPN-RES-MR64-3_4x.pth', help='sr pretrained base model')
 parser.add_argument('--pretrained', type=bool, default=True)
 parser.add_argument('--save_folder', default='weights/', help='Location to save checkpoint models')
-parser.add_argument('--prefix', default='Z71_CONSTANT_DC', help='Location to save checkpoint models')
+parser.add_argument('--prefix', default='Z71_CONSTANT_DC_L2', help='Location to save checkpoint models')
 
 opt = parser.parse_args()
 gpus_list = range(opt.gpus)
@@ -247,7 +247,7 @@ else:
     model = DBPN(num_channels=3, base_filter=64,  feat = 256, num_stages=7, scale_factor=opt.upscale_factor) 
     
 model = torch.nn.DataParallel(model, device_ids=gpus_list)
-criterion = nn.L1Loss()
+criterion = nn.L2Loss()
 
 print('---------- Networks architecture -------------')
 print_network(model)
