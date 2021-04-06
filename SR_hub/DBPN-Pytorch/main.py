@@ -19,6 +19,7 @@ import socket
 import time
 
 import nibabel as nib
+import numpy as np
 
 # Training settings
 parser = argparse.ArgumentParser(description='PyTorch Super Res Example')
