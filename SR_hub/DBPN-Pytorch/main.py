@@ -55,6 +55,56 @@ cudnn.benchmark = True
 dtype = torch.FloatTensor
 print(opt)
 
+def get_patch(img_in, img_tar, img_bic, patch_size, scale, ix=-1, iy=-1):
+    img_x = img_in.shape[0]
+    img_y = img_in.shape[1]
+    tar_x = img_x * scale
+    tar_y = img_y * scale
+
+    patch_mult = scale #if len(scale) > 1 else 1
+    tp = patch_mult * patch_size
+    ip = tp // scale
+
+    if ix == -1:
+        ix = random.randrange(0, img_x - ip + 1)
+    if iy == -1:
+        iy = random.randrange(0, img_y - ip + 1)
+
+    [tx, ty] = [scale * ix, scale * iy]
+
+    img_in = img_in[ix:ix+ip, iy:iy+ip]
+    img_tar = img_tar[tx:tx+tp, ty:ty+tp]
+    img_bic = img_bic[tx:tx+tp, ty:ty+tp]
+                
+    info_patch = {
+        'ix': ix, 'iy': iy, 'ip': ip, 'tx': tx, 'ty': ty, 'tp': tp}
+
+    return img_in, img_tar, img_bic, info_patch
+
+def augment(img_in, img_tar, img_bic, flip_h=True, flip_v=True, rot=True):
+    info_aug = {'flip_h': False, 'flip_v': False, 'trans': False}
+    
+    if random.random() < 0.5 and flip_h:
+        for img in [img_in, img_tar, img_bic]:
+            for idx_c in range(0):
+                img[:, :, idx_c] = np.fliplr(img)
+        info_aug['flip_h'] = True
+
+    if random.random() < 0.5 and flip_v:
+        for img in [img_in, img_tar, img_bic]:
+            for idx_c in range(0):
+                img[:, :, idx_c] = np.flipup(img)
+        info_aug['flip_v'] = True
+
+    if rot:
+        cnt_rot = int(random.random()//0.25)
+        for img in [img_in, img_tar, img_bic]:
+            for idx_c in range(0):
+                img[:, :, idx_c] = np.rot90(img, cnt_rot)
+        info_aug['trans'] = True
+            
+    return img_in, img_tar, img_bic, info_aug
+
 def train(epoch):
     epoch_loss = 0
     model.train()
@@ -228,52 +278,3 @@ for epoch in range(opt.start_iter, opt.nEpochs + 1):
     if (epoch+1) % (opt.snapshots) == 0:
         checkpoint(epoch)
 
-def get_patch(img_in, img_tar, img_bic, patch_size, scale, ix=-1, iy=-1):
-    img_x = img_in.shape[0]
-    img_y = img_in.shape[1]
-    tar_x = img_x * scale
-    tar_y = img_y * scale
-
-    patch_mult = scale #if len(scale) > 1 else 1
-    tp = patch_mult * patch_size
-    ip = tp // scale
-
-    if ix == -1:
-        ix = random.randrange(0, img_x - ip + 1)
-    if iy == -1:
-        iy = random.randrange(0, img_y - ip + 1)
-
-    [tx, ty] = [scale * ix, scale * iy]
-
-    img_in = img_in[ix:ix+ip, iy:iy+ip]
-    img_tar = img_tar[tx:tx+tp, ty:ty+tp]
-    img_bic = img_bic[tx:tx+tp, ty:ty+tp]
-                
-    info_patch = {
-        'ix': ix, 'iy': iy, 'ip': ip, 'tx': tx, 'ty': ty, 'tp': tp}
-
-    return img_in, img_tar, img_bic, info_patch
-
-def augment(img_in, img_tar, img_bic, flip_h=True, flip_v=True, rot=True):
-    info_aug = {'flip_h': False, 'flip_v': False, 'trans': False}
-    
-    if random.random() < 0.5 and flip_h:
-        for img in [img_in, img_tar, img_bic]:
-            for idx_c in range(0):
-                img[:, :, idx_c] = np.fliplr(img)
-        info_aug['flip_h'] = True
-
-    if random.random() < 0.5 and flip_v:
-        for img in [img_in, img_tar, img_bic]:
-            for idx_c in range(0):
-                img[:, :, idx_c] = np.flipup(img)
-        info_aug['flip_v'] = True
-
-    if rot:
-        cnt_rot = int(random.random()//0.25)
-        for img in [img_in, img_tar, img_bic]:
-            for idx_c in range(0):
-                img[:, :, idx_c] = np.rot90(img, cnt_rot)
-        info_aug['trans'] = True
-            
-    return img_in, img_tar, img_bic, info_aug
