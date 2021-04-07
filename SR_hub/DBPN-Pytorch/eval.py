@@ -115,9 +115,9 @@ def eval():
 
         templ_header = input_nii.header
         templ_affine = input_nii.affine
-        xy1200_data = input_nii.get_fdata()
+        xy1200_data = bicubic_nii.get_fdata()
         xy1200_norm = maxmin_norm(xy1200_data)
-        xy300_norm = maxmin_norm(bicubic_nii.get_fdata())
+        xy300_norm = maxmin_norm(input_nii.get_fdata())
         pet_recon = np.zeros(xy1200_data.shape)
         pet_diff = np.zeros(xy1200_data.shape)
         pet_z = xy300_norm.shape[2]
