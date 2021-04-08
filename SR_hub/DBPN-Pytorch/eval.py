@@ -103,8 +103,15 @@ def eval():
     for pet_path in pet_list:
         print("&"*60)
         print(pet_path)
-        bicubic_nii = nib.load(pet_path[:-11]+"_x250y250z2400f3.nii.gz") # 1200
-        input_nii = nib.load(pet_path[:-11]+"_x1000y1000z2400f3.nii.gz") # 300
+        try:
+            bicubic_nii = nib.load(pet_path[:-11]+"_x250y250z2400f3.nii.gz") # 1200
+            input_nii = nib.load(pet_path[:-11]+"_x1000y1000z2400f3.nii.gz") # 300
+        except:
+            pass
+        else:
+            bicubic_nii = nib.load(pet_path[:-11]+"_x250y250z2400.nii.gz") # 1200
+            input_nii = nib.load(pet_path[:-11]+"_x1000y1000z2400.nii.gz") # 300
+
         _, name = os.path.split(pet_path[:-11])
     # for batch in testing_data_loader:
 
