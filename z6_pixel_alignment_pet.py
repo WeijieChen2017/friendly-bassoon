@@ -23,10 +23,10 @@ for pet_path in pet_list:
     pet_file = nib.load(pet_path)
     name_0 = "ORI"
 
-    pet_1x = nib.processing.conform(pet_file, out_shape=(600, 600, 103), voxel_size=(1, 1, 2.4))
+    pet_1x = nib.processing.conform(pet_file, out_shape=(300, 300, 103), voxel_size=(1, 1, 2.4))
     name_1 = "x1000y1000z2400"
 
-    pet_4x = nib.processing.conform(pet_file, out_shape=(2400, 2400, 103), voxel_size=(0.25, 0.25, 2.4))
+    pet_4x = nib.processing.conform(pet_file, out_shape=(1200, 1200, 103), voxel_size=(0.25, 0.25, 2.4))
     name_2 = "x250y250z2400"
 
     for package in [[pet_file, name_0], [pet_1x, name_1], [pet_4x, name_2]]:
