@@ -108,7 +108,6 @@ def eval():
             input_nii = nib.load(pet_path[:-11]+"_x1000y1000z2400f3.nii.gz") # 300
         except:
             pass
-        else:
             bicubic_nii = nib.load(pet_path[:-11]+"_x250y250z2400.nii.gz") # 1200
             input_nii = nib.load(pet_path[:-11]+"_x1000y1000z2400.nii.gz") # 300
 
