@@ -21,6 +21,7 @@ for mri_path in mri_list:
     mri_dir = os.path.dirname(mri_path)+"/"
     mri_file = nib.load(mri_path)
     scale_factor = np.amax(mri_file.get_fdata())
+    name_0 = "ORI"
     
     file_1 = nib.processing.conform(mri_file, out_shape=(960, 960, 68), voxel_size=(0.25, 0.25, 2.4))
     name_1 = "x250y250z2400"
@@ -31,7 +32,7 @@ for mri_path in mri_list:
     file_3 = nib.processing.conform(file_2, out_shape=(240, 240, 68), voxel_size=(1, 1, 2.4))
     name_3 = "x1000y1000z2400f3"
 
-    for package in [[file_1, name_1], [file_2, name_2], [file_3, name_3]]:
+    for package in [[mri_file, name_0], [file_1, name_1], [file_2, name_2], [file_3, name_3]]:
         nii_file = package[0]
         tag = package[1]
 
