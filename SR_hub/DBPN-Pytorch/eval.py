@@ -53,7 +53,7 @@ parser.add_argument('--output', default='Results/', help='Location to save check
 parser.add_argument('--test_dataset', type=str, default='eval')
 parser.add_argument('--model_type', type=str, default='DBPN-RES-MR64-3')
 parser.add_argument('--residual', type=bool, default=False)
-parser.add_argument('--model', default='weights/z71L1122-WCHENDBPN-RES-MR64-3Z71_CONSTANT_DC_L2_epoch_999.pth', help='sr pretrained base model')
+parser.add_argument('--model', default='weights/z71L1122-WCHENDBPN-RES-MR64-3Z71_CONSTANT_DC_PoissonNLLLoss_epoch_999.pth', help='sr pretrained base model')
 
 opt = parser.parse_args()
 
