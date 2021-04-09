@@ -4,7 +4,7 @@ import nibabel as nib
 import numpy as np
 import nibabel.processing
 
-pet_list = glob.glob("./data/nick_PET/*.nii.gz")
+pet_list = glob.glob("./data/eval_epoch/*_PET.nii.gz")
 pet_list.sort()
 
 def maxmin_norm(data):
