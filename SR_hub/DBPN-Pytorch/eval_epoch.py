@@ -279,7 +279,7 @@ def chop_forward(x, model, scale, shave=8, min_size=80000, nGPUs=opt.gpus):
 model_epoch_hub = ["99, 299, 499, 699, 899"]
 for model_epoch in model_epoch_hub:
     model_path = opt.model + model_epoch + ".pth"
-    model.load_state_dict(torch.load(opt.model, map_location=lambda storage, loc: storage))
+    model.load_state_dict(torch.load(model_path, map_location=lambda storage, loc: storage))
     print('Pre-trained SR model is loaded.')
     if cuda:
         model = model.cuda(gpus_list[0])
