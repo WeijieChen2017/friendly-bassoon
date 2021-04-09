@@ -53,7 +53,7 @@ parser.add_argument('--output', default='Results/', help='Location to save check
 parser.add_argument('--test_dataset', type=str, default='eval_nick')
 parser.add_argument('--model_type', type=str, default='DBPN-RES-MR64-3')
 parser.add_argument('--residual', type=bool, default=False)
-parser.add_argument('--model', default='weights/z71L1122-WCHENDBPN-RES-MR64-3Z71_CONSTANT_DC_L2_epoch_899.pth', help='sr pretrained base model')
+parser.add_argument('--model', default='weights/z71L1122-WCHENDBPN-RES-MR64-3Z71_CONSTANT_DC_epoch_', help='sr pretrained base model')
 
 opt = parser.parse_args()
 
@@ -85,18 +85,10 @@ else:
 if cuda:
     model = torch.nn.DataParallel(model, device_ids=gpus_list)
 
-model.load_state_dict(torch.load(opt.model, map_location=lambda storage, loc: storage))
-print('Pre-trained SR model is loaded.')
-
-if cuda:
-    model = model.cuda(gpus_list[0])
-
-print(model)
-
 def eval():
     model.eval()
 
-    pet_list = glob.glob(os.path.join(opt.input_dir,opt.test_dataset)+"/*_ORI.nii.gz")
+    pet_list = glob.glob(os.path.join(opt.input_dir, opt.test_dataset)+"/*_ORI.nii.gz")
     # print(os.path.join(opt.input_dir,opt.test_dataset)+"/*.nii.gz")
     pet_list.sort()
 
@@ -284,5 +276,15 @@ def chop_forward(x, model, scale, shave=8, min_size=80000, nGPUs=opt.gpus):
 
     return output
 
-##Eval Start!!!!
-eval()
+model_epoch_hub = ["99, 299, 499, 699, 899"]
+for model_epoch in model_epoch_hub:
+    model_path = opt.model + model_epoch + ".pth"
+    model.load_state_dict(torch.load(opt.model, map_location=lambda storage, loc: storage))
+    print('Pre-trained SR model is loaded.')
+    if cuda:
+        model = model.cuda(gpus_list[0])
+    print(model)
+    eval()
+    cmd = "mv Reseults/"+opt.test_dataset+" Results/"+opt.test_dataset+"_"+model_epoch
+    print(cmd)
+    os.system(cmd)
