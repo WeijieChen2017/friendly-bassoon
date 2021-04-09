@@ -50,7 +50,7 @@ parser.add_argument('--seed', type=int, default=123, help='random seed to use. D
 parser.add_argument('--gpus', default=1, type=int, help='number of gpu')
 parser.add_argument('--input_dir', type=str, default='Input')
 parser.add_argument('--output', default='Results/', help='Location to save checkpoint models')
-parser.add_argument('--test_dataset', type=str, default='eval_nick')
+parser.add_argument('--test_dataset', type=str, default='eval_epoch')
 parser.add_argument('--model_type', type=str, default='DBPN-RES-MR64-3')
 parser.add_argument('--residual', type=bool, default=False)
 parser.add_argument('--model', default='weights/z71L1122-WCHENDBPN-RES-MR64-3Z71_CONSTANT_DC_epoch_', help='sr pretrained base model')
