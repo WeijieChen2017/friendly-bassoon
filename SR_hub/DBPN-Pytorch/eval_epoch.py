@@ -276,7 +276,7 @@ def chop_forward(x, model, scale, shave=8, min_size=80000, nGPUs=opt.gpus):
 
     return output
 
-model_epoch_hub = ["99", "299", "499", "699", "899"]
+model_epoch_hub = ["299", "499", "699", "899"]
 for model_epoch in model_epoch_hub:
     model_path = opt.model + model_epoch + ".pth"
     model.load_state_dict(torch.load(model_path, map_location=lambda storage, loc: storage))
@@ -285,6 +285,6 @@ for model_epoch in model_epoch_hub:
         model = model.cuda(gpus_list[0])
     print(model)
     eval()
-    cmd = "mv Reseults/"+opt.test_dataset+" Results/"+opt.test_dataset+"_"+model_epoch
+    cmd = "mv Results/"+opt.test_dataset+" Results/"+opt.test_dataset+"_"+model_epoch
     print(cmd)
     os.system(cmd)
