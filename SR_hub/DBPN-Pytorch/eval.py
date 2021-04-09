@@ -118,8 +118,8 @@ def eval():
         # name = batch[2]
         n_channel = 3
 
-        templ_header = input_nii.header
-        templ_affine = input_nii.affine
+        templ_header = bicubic_nii.header
+        templ_affine = bicubic_nii.affine
         xy1200_data = bicubic_nii.get_fdata()
         xy1200_norm = maxmin_norm(xy1200_data)
         xy300_norm = maxmin_norm(input_nii.get_fdata())
