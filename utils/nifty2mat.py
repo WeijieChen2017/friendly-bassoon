@@ -7,7 +7,7 @@ import glob
 import os
 
 tag = "mri_4688"
-nii_list = glob.glob("./data/"+tag+"/*.nii.gz")
+nii_list = glob.glob("../data/"+tag+"/*.nii.gz")
 nii_list.sort()
 for nii_path in nii_list:
     print(nii_path)
@@ -18,7 +18,7 @@ for nii_path in nii_list:
     mdic = {"data": nii_data}
     nii_name = os.path.basename(nii_path)
     nii_group = nii_name[1:3]
-    save_name = "./data/"+tag+"_mat/"+nii_group+"/"
+    save_name = "../data/"+tag+"_mat/"+nii_group+"/"
     if not os.path.exists(save_name):
         os.makedirs(save_name)
     save_name += nii_name[:-7]+".mat"
