@@ -11,6 +11,11 @@ nii_list = glob.glob("../data/"+tag+"/*.nii.gz")
 nii_list.sort()
 for nii_path in nii_list:
     print(nii_path)
+    nii_name = os.path.basename(nii_path)
+    # nii_group = nii_name[1:3]
+    save_name = "../data/"+tag+"_mat/"#+nii_group+"/"
+    if not os.path.exists(save_name):
+        os.makedirs(save_name)
     nii_file = nib.load(nii_path)
     nii_file_zoom = nib.processing.conform(nii_file, out_shape=(256, 256, 89), voxel_size=(0.9376, 0.9376, 1.9145))
     nib.save(nii_file_zoom, "../data/"+tag+"_mat/"+os.path.basename(nii_path)[:-7]+"_x256y256z89.nii.gz")
@@ -19,11 +24,7 @@ for nii_path in nii_list:
     nii_data = nii_file_zoom.get_fdata()
     print(nii_data.shape)
     mdic = {"data": nii_data}
-    nii_name = os.path.basename(nii_path)
-    # nii_group = nii_name[1:3]
-    save_name = "../data/"+tag+"_mat/"#+nii_group+"/"
-    if not os.path.exists(save_name):
-        os.makedirs(save_name)
+
     save_name += nii_name[:-7]+".mat"
     savemat(save_name, mdic)
     print("Mat:", save_name)
