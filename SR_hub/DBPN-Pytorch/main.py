@@ -120,7 +120,7 @@ def train(epoch):
     
             input_nii = nib.load(image_dir+train_hub[idx_t]+"_Small"+suffix_hub[idx_f]+".nii.gz").get_fdata()
             target_nii = nib.load(image_dir+train_hub[idx_t]+"_GT.nii.gz").get_fdata()
-            bicubic_nii = nib.load(image_dir+train_hub[idx_t]+"Large"+suffix_hub[idx_f]+".nii.gz").get_fdata()
+            bicubic_nii = nib.load(image_dir+train_hub[idx_t]+"_Large"+suffix_hub[idx_f]+".nii.gz").get_fdata()
 
             cntz = input_nii.shape[2]
             input_batch = np.zeros((opt.batchSize, 3, opt.patch_size, opt.patch_size))
