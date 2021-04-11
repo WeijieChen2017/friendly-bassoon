@@ -24,15 +24,30 @@ for mri_path in mri_list:
     name_0 = "ORI"
     
     file_1 = nib.processing.conform(mri_file, out_shape=(960, 960, 68), voxel_size=(0.25, 0.25, 2.4))
-    name_1 = "x250y250z2400"
+    name_1 = "GT"
     
-    file_2 = nib.processing.smooth_image(file_1, fwhm=3)
-    name_2 = "x250y250z2400f3"
+    file_2l = nib.processing.smooth_image(file_1, fwhm=3)
+    name_2l = "Large3"
     
-    file_3 = nib.processing.conform(file_2, out_shape=(240, 240, 68), voxel_size=(1, 1, 2.4))
-    name_3 = "x1000y1000z2400f3"
+    file_2s = nib.processing.conform(file_2l, out_shape=(240, 240, 68), voxel_size=(1, 1, 2.4))
+    name_2s = "Small3"
 
-    for package in [[mri_file, name_0], [file_1, name_1], [file_2, name_2], [file_3, name_3]]:
+    file_3l = nib.processing.smooth_image(file_1, fwhm=5)
+    name_3l = "Large5"
+
+    file_3s = nib.processing.conform(file_3l, out_shape=(240, 240, 68), voxel_size=(1, 1, 2.4))
+    name_3s = "Small5"
+
+    file_4l = nib.processing.smooth_image(file_1, fwhm=7)
+    name_4l = "Large7"
+
+    file_4s = nib.processing.conform(file_4l, out_shape=(240, 240, 68), voxel_size=(1, 1, 2.4))
+    name_4s = "Small7"
+
+    for package in [[mri_file, name_0], [file_1, name_1],
+                    [file_2l, name_2l], [file_2s, name_2s],
+                    [file_3l, name_3l], [file_3s, name_3s],
+                    [file_4l, name_4l], [file_4s, name_4s]]:
         nii_file = package[0]
         tag = package[1]
 
