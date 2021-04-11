@@ -110,61 +110,65 @@ def train(epoch):
     model.train()
 
     train_hub = ["s1bp1", "s1bp2", "s1b", "s1s", "s2c", "s2s", "s3b", "s3s", "s3c"]
+    suffix_hub = ["3", "5", "7"]
     image_dir = "./dataset/z71/"
     n_dataset = len(train_hub)
+    n_fwhm = len(suffix_hub)
     for idx_t in range(n_dataset):
+
+        for idx_f in range(n_fwhm):
     
-        input_nii = nib.load(image_dir+train_hub[idx_t]+"_x240y240z71f3.nii.gz").get_fdata()
-        target_nii = nib.load(image_dir+train_hub[idx_t]+"_x960y960z71.nii.gz").get_fdata()
-        bicubic_nii = nib.load(image_dir+train_hub[idx_t]+"_x960y960z71f3.nii.gz").get_fdata()
+            input_nii = nib.load(image_dir+train_hub[idx_t]+"_Small"+suffix_hub[idx_f]+".nii.gz").get_fdata()
+            target_nii = nib.load(image_dir+train_hub[idx_t]+"_GT.gz").get_fdata()
+            bicubic_nii = nib.load(image_dir+train_hub[idx_t]+"Large"+suffix_hub[idx_f]+".nii.gz").get_fdata()
 
-        cntz = input_nii.shape[2]
-        input_batch = np.zeros((opt.batchSize, 3, opt.patch_size, opt.patch_size))
-        target_batch = np.zeros((opt.batchSize, 3, opt.patch_size*opt.upscale_factor, opt.patch_size*opt.upscale_factor))
-        bicubic_batch = np.zeros((opt.batchSize, 3, opt.patch_size*opt.upscale_factor, opt.patch_size*opt.upscale_factor))
-        
-        for idx_b in range(opt.batchSize):
-            iz = random.randrange(1, cntz-1)
-            input = input_nii[:, :, iz-1:iz+2]
-            target = target_nii[:, :, iz-1:iz+2]
-            bicubic = bicubic_nii[:, :, iz-1:iz+2]
-
-            input, target, bicubic, _ = get_patch(input,target,bicubic, opt.patch_size, opt.upscale_factor)
-            input, target, bicubic, _ = augment(input, target, bicubic)
-
-            for idx_c in range(3):
-                input_batch[idx_b, idx_c, :, :] = input[:, :, idx_c]
-                target_batch[idx_b, idx_c, :, :] = target[:, :, idx_c]
-                bicubic_batch[idx_b, idx_c, :, :] = bicubic[:, :, idx_c]
-
-        input = torch.cuda.FloatTensor(input_batch)
-        target = torch.cuda.FloatTensor(target_batch)
-        bicubic = torch.cuda.FloatTensor(bicubic_batch)
-        
-        input = Variable(input)
-        target = Variable(target)
-        bicubic = Variable(bicubic)
+            cntz = input_nii.shape[2]
+            input_batch = np.zeros((opt.batchSize, 3, opt.patch_size, opt.patch_size))
+            target_batch = np.zeros((opt.batchSize, 3, opt.patch_size*opt.upscale_factor, opt.patch_size*opt.upscale_factor))
+            bicubic_batch = np.zeros((opt.batchSize, 3, opt.patch_size*opt.upscale_factor, opt.patch_size*opt.upscale_factor))
             
-        if cuda:
-            input = input.cuda(gpus_list[0])
-            target = target.cuda(gpus_list[0])
-            bicubic = bicubic.cuda(gpus_list[0])
+            for idx_b in range(opt.batchSize):
+                iz = random.randrange(1, cntz-1)
+                input = input_nii[:, :, iz-1:iz+2]
+                target = target_nii[:, :, iz-1:iz+2]
+                bicubic = bicubic_nii[:, :, iz-1:iz+2]
 
-        optimizer.zero_grad()
-        t0 = time.time()
-        prediction = model(input)
-        # print("prediction", prediction.size())
+                input, target, bicubic, _ = get_patch(input,target,bicubic, opt.patch_size, opt.upscale_factor)
+                input, target, bicubic, _ = augment(input, target, bicubic)
 
-        if opt.residual:
-            prediction = prediction + bicubic
+                for idx_c in range(3):
+                    input_batch[idx_b, idx_c, :, :] = input[:, :, idx_c]
+                    target_batch[idx_b, idx_c, :, :] = target[:, :, idx_c]
+                    bicubic_batch[idx_b, idx_c, :, :] = bicubic[:, :, idx_c]
 
-        loss = criterion(prediction, target)
-        t1 = time.time()
-        epoch_loss += loss.data
-        loss.backward()
-        optimizer.step()
+            input = torch.cuda.FloatTensor(input_batch)
+            target = torch.cuda.FloatTensor(target_batch)
+            bicubic = torch.cuda.FloatTensor(bicubic_batch)
+            
+            input = Variable(input)
+            target = Variable(target)
+            bicubic = Variable(bicubic)
+                
+            if cuda:
+                input = input.cuda(gpus_list[0])
+                target = target.cuda(gpus_list[0])
+                bicubic = bicubic.cuda(gpus_list[0])
 
-        print("===> Epoch[{}]({}/{}): Loss: {:.4f} || Timer: {:.4f} sec.".format(epoch, idx_t, n_dataset, loss.data, (t1 - t0)))
+            optimizer.zero_grad()
+            t0 = time.time()
+            prediction = model(input)
+            # print("prediction", prediction.size())
+
+            if opt.residual:
+                prediction = prediction + bicubic
+
+            loss = criterion(prediction, target)
+            t1 = time.time()
+            epoch_loss += loss.data
+            loss.backward()
+            optimizer.step()
+
+            print("===> Epoch[{}]({}/{}): Loss: {:.4f} || Timer: {:.4f} sec.".format(epoch, idx_t*n_fwhm+idx_f, n_dataset*n_fwhm, loss.data, (t1 - t0)))
 
     print("===> Epoch {} Complete: Avg. Loss: {:.4f}".format(epoch, epoch_loss / n_dataset))
 
