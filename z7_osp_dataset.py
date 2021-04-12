@@ -19,9 +19,9 @@ for mri_path in mri_list:
     mri_name = os.path.basename(mri_path)
     mri_name = mri_name[:mri_name.find(".")]
     mri_dir = os.path.dirname(mri_path)+"/"
-    scale_factor = np.amax(mri_file.get_fdata())
     
     ori_file = nib.load(mri_path)
+    scale_factor = np.amax(ori_file.get_fdata())
     osp_path = mri_dir+mri_name[:-4]+"_osp.nii.gz"
     osp_file = nib.load(osp_path)
     
