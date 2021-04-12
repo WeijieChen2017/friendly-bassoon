@@ -53,7 +53,7 @@ parser.add_argument('--output', default='Results/', help='Location to save check
 parser.add_argument('--test_dataset', type=str, default='eval_epoch')
 parser.add_argument('--model_type', type=str, default='DBPN-RES-MR64-3')
 parser.add_argument('--residual', type=bool, default=False)
-parser.add_argument('--model', default='weights/f357L1122-WCHENDBPN-RES-MR64-3f357_L1_epoch_', help='sr pretrained base model')
+parser.add_argument('--model', default='weights/duettoL1122-WCHENDBPN-RES-MR64-3f357_L1_epoch_', help='sr pretrained base model')
 
 opt = parser.parse_args()
 
@@ -276,7 +276,7 @@ def chop_forward(x, model, scale, shave=8, min_size=80000, nGPUs=opt.gpus):
 
     return output
 
-model_epoch_hub = ["99", "299"]
+model_epoch_hub = ["99"]
 for model_epoch in model_epoch_hub:
     model_path = opt.model + model_epoch + ".pth"
     model.load_state_dict(torch.load(model_path, map_location=lambda storage, loc: storage))
