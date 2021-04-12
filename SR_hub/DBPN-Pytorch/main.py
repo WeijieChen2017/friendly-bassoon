@@ -36,7 +36,7 @@ parser.add_argument('--seed', type=int, default=123, help='random seed to use. D
 parser.add_argument('--gpus', default=1, type=int, help='number of gpu')
 parser.add_argument('--data_dir', type=str, default='./dataset')
 parser.add_argument('--data_augmentation', type=bool, default=True)
-parser.add_argument('--hr_train_dataset', type=str, default='f357')
+parser.add_argument('--hr_train_dataset', type=str, default='duetto')
 parser.add_argument('--model_type', type=str, default='DBPN-RES-MR64-3')
 parser.add_argument('--residual', type=bool, default=True)
 parser.add_argument('--patch_size', type=int, default=40, help='Size of cropped HR image')
@@ -44,7 +44,7 @@ parser.add_argument('--pretrained_sr', default='DBPN-RES-MR64-3_4x.pth', help='s
 # parser.add_argument('--pretrained_sr', default='DBPN-RES-MR64-3_4x.pth', help='sr pretrained base model')
 parser.add_argument('--pretrained', type=bool, default=True)
 parser.add_argument('--save_folder', default='weights/', help='Location to save checkpoint models')
-parser.add_argument('--prefix', default='f357_L1', help='Location to save checkpoint models')
+parser.add_argument('--prefix', default='duetto_L1', help='Location to save checkpoint models')
 
 opt = parser.parse_args()
 gpus_list = range(opt.gpus)
@@ -110,7 +110,7 @@ def train(epoch):
     model.train()
 
     train_hub = ["s1bp1", "s1bp2", "s1b", "s1s", "s2c", "s2s", "s3b", "s3s", "s3c"]
-    suffix_hub = ["3", "5", "7"]
+    # suffix_hub = ["3", "5", "7"]
     image_dir = "./dataset/f357/"
     n_dataset = len(train_hub)
     n_fwhm = len(suffix_hub)
@@ -118,9 +118,9 @@ def train(epoch):
 
         for idx_f in range(n_fwhm):
     
-            input_nii = nib.load(image_dir+train_hub[idx_t]+"_Small"+suffix_hub[idx_f]+".nii.gz").get_fdata()
-            target_nii = nib.load(image_dir+train_hub[idx_t]+"_GT.nii.gz").get_fdata()
-            bicubic_nii = nib.load(image_dir+train_hub[idx_t]+"_Large"+suffix_hub[idx_f]+".nii.gz").get_fdata()
+            input_nii = nib.load(image_dir+train_hub[idx_t]+"_ori_osp_small.nii.gz").get_fdata()
+            target_nii = nib.load(image_dir+train_hub[idx_t]+"_ori_GT.nii.gz").get_fdata()
+            bicubic_nii = nib.load(image_dir+train_hub[idx_t]+"_ori_osp_large.nii.gz").get_fdata()
 
             cntz = input_nii.shape[2]
             input_batch = np.zeros((opt.batchSize, 3, opt.patch_size, opt.patch_size))
