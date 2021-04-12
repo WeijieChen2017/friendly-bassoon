@@ -113,7 +113,7 @@ def train(epoch):
     # suffix_hub = ["3", "5", "7"]
     image_dir = "./dataset/f357/"
     n_dataset = len(train_hub)
-    n_fwhm = len(suffix_hub)
+    # n_fwhm = len(suffix_hub)
     for idx_t in range(n_dataset):
 
         for idx_f in range(n_fwhm):
