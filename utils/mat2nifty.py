@@ -12,7 +12,7 @@ for nii_path in nii_list:
     nii_file = nib.load(nii_path)
     tmpl_affine = nii_file.affine
     tmpl_header = nii_file.header
-    nii_name = os.path.basename(nii_path)[:-7]
+    nii_name = os.path.basename(nii_path)[:-19]
     osp_path = os.path.dirname(nii_path)+"/"+nii_name+"_recon_OSP_F4.mat"
     ori_path = os.path.dirname(nii_path)+"/"+nii_name+".mat"
 
