@@ -5,11 +5,6 @@ import nibabel as nib
 import glob
 import os
 
-tmpl_name = "./test_data/zeros_PET.nii"
-tmpl_nii = nib.load(tmpl_name)
-tmpl_header = tmpl_nii.header
-tmpl_affine = tmpl_nii.affine
-
 nii_list = glob.glob("../data/mat/*.nii.gz")
 nii_list.sort()
 for nii_path in nii_list:
@@ -21,7 +16,7 @@ for nii_path in nii_list:
     osp_path = os.path.dirname(nii_path)+nii_name+"_recon_OSP_F4.mat"
     ori_path = os.path.dirname(nii_path)+nii_name+".mat"
 
-    for package in [[osp_path, "osp"], [ori_path, "ori"]]
+    for package in [[osp_path, "osp"], [ori_path, "ori"]]:
 
         mat_path = package[0]
         save_tag = package[1]
