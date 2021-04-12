@@ -13,8 +13,8 @@ for nii_path in nii_list:
     tmpl_affine = nii_file.affine
     tmpl_header = nii_file.header
     nii_name = os.path.basename(nii_path)[:-7]
-    osp_path = os.path.dirname(nii_path)+nii_name+"_recon_OSP_F4.mat"
-    ori_path = os.path.dirname(nii_path)+nii_name+".mat"
+    osp_path = os.path.dirname(nii_path)+"/"+nii_name+"_recon_OSP_F4.mat"
+    ori_path = os.path.dirname(nii_path)+"/"+nii_name+".mat"
 
     for package in [[osp_path, "osp"], [ori_path, "ori"]]:
 
