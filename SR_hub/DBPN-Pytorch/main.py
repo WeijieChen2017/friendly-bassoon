@@ -123,8 +123,7 @@ def train(epoch):
             input_nii = nib.load(image_dir+"MINC_"+train_hub[idx_t]+"_v1_"+"Small"+suffix_hub[idx_f]+".nii.gz").get_fdata()
             target_nii = nib.load(image_dir+"MINC_"+train_hub[idx_t]+"_v1_GT.nii.gz").get_fdata()
             bicubic_nii = nib.load(image_dir+"MINC_"+train_hub[idx_t]+"_v1_"+"Large"+suffix_hub[idx_f]+".nii.gz").get_fdata()
-
-            print(input_nii.shape, target_nii.shape, bicubic_nii.shape)
+            # print(input_nii.shape, target_nii.shape, bicubic_nii.shape)
 
             cntz = input_nii.shape[2]
             input_batch = np.zeros((opt.batchSize, 3, opt.patch_size, opt.patch_size))
@@ -136,7 +135,7 @@ def train(epoch):
                 input = input_nii[:, :, iz-1:iz+2]
                 target = target_nii[:, :, iz-1:iz+2]
                 bicubic = bicubic_nii[:, :, iz-1:iz+2]
-                print(input.shape, target.shape, bicubic.shape)
+                # print(input.shape, target.shape, bicubic.shape)
 
                 input, target, bicubic, _ = get_patch(input,target,bicubic, opt.patch_size, opt.upscale_factor)
                 input, target, bicubic, _ = augment(input, target, bicubic)
