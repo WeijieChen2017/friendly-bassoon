@@ -29,19 +29,19 @@ for mri_path in mri_list:
     file_2l = nib.processing.smooth_image(file_1, fwhm=3)
     name_2l = "Large3"
     
-    file_2s = nib.processing.conform(file_2l, out_shape=(180, 210, 360), voxel_size=(2, 2, 1))
+    file_2s = nib.processing.conform(file_2l, out_shape=(180, 210, 180), voxel_size=(2, 2, 2))
     name_2s = "Small3"
 
     file_3l = nib.processing.smooth_image(file_1, fwhm=5)
     name_3l = "Large5"
 
-    file_3s = nib.processing.conform(file_3l, out_shape=(180, 210, 360), voxel_size=(2, 2, 1))
+    file_3s = nib.processing.conform(file_3l, out_shape=(180, 210, 180), voxel_size=(2, 2, 2))
     name_3s = "Small5"
 
     file_4l = nib.processing.smooth_image(file_1, fwhm=7)
     name_4l = "Large7"
 
-    file_4s = nib.processing.conform(file_4l, out_shape=(180, 210, 360), voxel_size=(2, 2, 1))
+    file_4s = nib.processing.conform(file_4l, out_shape=(180, 210, 180), voxel_size=(2, 2, 2))
     name_4s = "Small7"
 
     # for package in [[file_1, name_1]]:
