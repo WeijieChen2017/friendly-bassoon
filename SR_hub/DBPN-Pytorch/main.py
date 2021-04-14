@@ -36,7 +36,7 @@ parser.add_argument('--seed', type=int, default=123, help='random seed to use. D
 parser.add_argument('--gpus', default=1, type=int, help='number of gpu')
 parser.add_argument('--data_dir', type=str, default='./dataset')
 parser.add_argument('--data_augmentation', type=bool, default=True)
-parser.add_argument('--hr_train_dataset', type=str, default='duetto')
+parser.add_argument('--hr_train_dataset', type=str, default='minc')
 parser.add_argument('--model_type', type=str, default='DBPN-RES-MR64-3')
 parser.add_argument('--residual', type=bool, default=True)
 parser.add_argument('--patch_size', type=int, default=40, help='Size of cropped HR image')
@@ -44,7 +44,7 @@ parser.add_argument('--pretrained_sr', default='DBPN-RES-MR64-3_4x.pth', help='s
 # parser.add_argument('--pretrained_sr', default='DBPN-RES-MR64-3_4x.pth', help='sr pretrained base model')
 parser.add_argument('--pretrained', type=bool, default=True)
 parser.add_argument('--save_folder', default='weights/', help='Location to save checkpoint models')
-parser.add_argument('--prefix', default='duetto_L1', help='Location to save checkpoint models')
+parser.add_argument('--prefix', default='mincL2_', help='Location to save checkpoint models')
 
 opt = parser.parse_args()
 gpus_list = range(opt.gpus)
@@ -109,67 +109,69 @@ def train(epoch):
     epoch_loss = 0
     model.train()
 
-    train_hub = ["s1bp1", "s1bp2", "s1b", "s1s", "s2c", "s2s", "s3b", "s3s", "s3c"]
-    # suffix_hub = ["3", "5", "7"]
+    # train_hub = ["s1bp1", "s1bp2", "s1b", "s1s", "s2c", "s2s", "s3b", "s3s", "s3c"]
+    train_hub = ["004", "005", "006", "018", "020", "038", "041", "042", "043", "044",
+                 "045", "046", "047", "048", "049", "050", "051", "052", "053", "054"]
+    suffix_hub = ["3", "5", "7"]
     image_dir = "./dataset/"+opt.hr_train_dataset+"/"
     n_dataset = len(train_hub)
-    # n_fwhm = len(suffix_hub)
+    n_fwhm = len(suffix_hub)
     for idx_t in range(n_dataset):
 
-        # for idx_f in range(n_fwhm):
+        for idx_f in range(n_fwhm):
     
-        input_nii = nib.load(image_dir+train_hub[idx_t]+"_ori_osp_small.nii.gz").get_fdata()
-        target_nii = nib.load(image_dir+train_hub[idx_t]+"_ori_GT.nii.gz").get_fdata()
-        bicubic_nii = nib.load(image_dir+train_hub[idx_t]+"_ori_osp_large.nii.gz").get_fdata()
+            input_nii = nib.load(image_dir+"MINC_"+train_hub[idx_t]+"_v1_"+"Small"+suffix_hub[idx_f]+".nii.gz").get_fdata()
+            target_nii = nib.load(image_dir+"MINC_"+train_hub[idx_t]+"_v1_GT.nii.gz").get_fdata()
+            bicubic_nii = nib.load(image_dir+"MINC_"+train_hub[idx_t]+"_v1_"+"Large"+suffix_hub[idx_f]+".nii.gz").get_fdata()
 
-        cntz = input_nii.shape[2]
-        input_batch = np.zeros((opt.batchSize, 3, opt.patch_size, opt.patch_size))
-        target_batch = np.zeros((opt.batchSize, 3, opt.patch_size*opt.upscale_factor, opt.patch_size*opt.upscale_factor))
-        bicubic_batch = np.zeros((opt.batchSize, 3, opt.patch_size*opt.upscale_factor, opt.patch_size*opt.upscale_factor))
-        
-        for idx_b in range(opt.batchSize):
-            iz = random.randrange(1, cntz-1)
-            input = input_nii[:, :, iz-1:iz+2]
-            target = target_nii[:, :, iz-1:iz+2]
-            bicubic = bicubic_nii[:, :, iz-1:iz+2]
-
-            input, target, bicubic, _ = get_patch(input,target,bicubic, opt.patch_size, opt.upscale_factor)
-            input, target, bicubic, _ = augment(input, target, bicubic)
-
-            for idx_c in range(3):
-                input_batch[idx_b, idx_c, :, :] = input[:, :, idx_c]
-                target_batch[idx_b, idx_c, :, :] = target[:, :, idx_c]
-                bicubic_batch[idx_b, idx_c, :, :] = bicubic[:, :, idx_c]
-
-        input = torch.cuda.FloatTensor(input_batch)
-        target = torch.cuda.FloatTensor(target_batch)
-        bicubic = torch.cuda.FloatTensor(bicubic_batch)
-        
-        input = Variable(input)
-        target = Variable(target)
-        bicubic = Variable(bicubic)
+            cntz = input_nii.shape[2]
+            input_batch = np.zeros((opt.batchSize, 3, opt.patch_size, opt.patch_size))
+            target_batch = np.zeros((opt.batchSize, 3, opt.patch_size*opt.upscale_factor, opt.patch_size*opt.upscale_factor))
+            bicubic_batch = np.zeros((opt.batchSize, 3, opt.patch_size*opt.upscale_factor, opt.patch_size*opt.upscale_factor))
             
-        if cuda:
-            input = input.cuda(gpus_list[0])
-            target = target.cuda(gpus_list[0])
-            bicubic = bicubic.cuda(gpus_list[0])
+            for idx_b in range(opt.batchSize):
+                iz = random.randrange(1, cntz-1)
+                input = input_nii[:, :, iz-1:iz+2]
+                target = target_nii[:, :, iz-1:iz+2]
+                bicubic = bicubic_nii[:, :, iz-1:iz+2]
 
-        optimizer.zero_grad()
-        t0 = time.time()
-        prediction = model(input)
-        # print("prediction", prediction.size())
+                input, target, bicubic, _ = get_patch(input,target,bicubic, opt.patch_size, opt.upscale_factor)
+                input, target, bicubic, _ = augment(input, target, bicubic)
 
-        if opt.residual:
-            prediction = prediction + bicubic
+                for idx_c in range(3):
+                    input_batch[idx_b, idx_c, :, :] = input[:, :, idx_c]
+                    target_batch[idx_b, idx_c, :, :] = target[:, :, idx_c]
+                    bicubic_batch[idx_b, idx_c, :, :] = bicubic[:, :, idx_c]
 
-        loss = criterion(prediction, target)
-        t1 = time.time()
-        epoch_loss += loss.data
-        loss.backward()
-        optimizer.step()
+            input = torch.cuda.FloatTensor(input_batch)
+            target = torch.cuda.FloatTensor(target_batch)
+            bicubic = torch.cuda.FloatTensor(bicubic_batch)
+            
+            input = Variable(input)
+            target = Variable(target)
+            bicubic = Variable(bicubic)
+                
+            if cuda:
+                input = input.cuda(gpus_list[0])
+                target = target.cuda(gpus_list[0])
+                bicubic = bicubic.cuda(gpus_list[0])
 
-        print("===> Epoch[{}]({}/{}): Loss: {:.4f} || Timer: {:.4f} sec.".format(epoch, idx_t, n_dataset, loss.data, (t1 - t0)))
-        # print("===> Epoch[{}]({}/{}): Loss: {:.4f} || Timer: {:.4f} sec.".format(epoch, idx_t*n_fwhm+idx_f, n_dataset*n_fwhm, loss.data, (t1 - t0)))
+            optimizer.zero_grad()
+            t0 = time.time()
+            prediction = model(input)
+            # print("prediction", prediction.size())
+
+            if opt.residual:
+                prediction = prediction + bicubic
+
+            loss = criterion(prediction, target)
+            t1 = time.time()
+            epoch_loss += loss.data
+            loss.backward()
+            optimizer.step()
+
+            # print("===> Epoch[{}]({}/{}): Loss: {:.4f} || Timer: {:.4f} sec.".format(epoch, idx_t, n_dataset, loss.data, (t1 - t0)))
+            print("===> Epoch[{}]({}/{}): Loss: {:.4f} || Timer: {:.4f} sec.".format(epoch, idx_t*n_fwhm+idx_f, n_dataset*n_fwhm, loss.data, (t1 - t0)))
 
     print("===> Epoch {} Complete: Avg. Loss: {:.4f}".format(epoch, epoch_loss / n_dataset))
 
@@ -252,7 +254,7 @@ else:
     model = DBPN(num_channels=3, base_filter=64,  feat = 256, num_stages=7, scale_factor=opt.upscale_factor) 
     
 model = torch.nn.DataParallel(model, device_ids=gpus_list)
-criterion = nn.L1Loss()
+criterion = nn.MSELoss()
 
 print('---------- Networks architecture -------------')
 print_network(model)
