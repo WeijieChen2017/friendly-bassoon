@@ -4,7 +4,7 @@ import nibabel as nib
 import numpy as np
 import nibabel.processing
 
-mri_list = glob.glob("./*.nii.gz") #data/minc_v1/
+mri_list = glob.glob("./data/minc_v1/*.nii.gz") #
 mri_list.sort()
 
 def maxmin_norm(data):
