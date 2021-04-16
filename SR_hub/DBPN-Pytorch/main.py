@@ -133,10 +133,12 @@ def train(epoch):
             cnt_iter = (cntz-2) // opt.batchSize
             seq_order = np.linspace(1, cntz-2, num=cntz-2)
             random.shuffle(seq_order)
+            print(seq_order)
 
             for idx_s in range(cnt_iter):
                 for idx_b in range(opt.batchSize):
                     iz = seq_order[idx_s*opt.batchSize+idx_b]
+                    print(iz)
                     input = input_nii[:, :, iz-1:iz+2]
                     target = target_nii[:, :, iz-1:iz+2]
                     bicubic = bicubic_nii[:, :, iz-1:iz+2]
