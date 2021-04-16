@@ -130,50 +130,55 @@ def train(epoch):
             target_batch = np.zeros((opt.batchSize, 3, opt.patch_size*opt.upscale_factor, opt.patch_size*opt.upscale_factor))
             bicubic_batch = np.zeros((opt.batchSize, 3, opt.patch_size*opt.upscale_factor, opt.patch_size*opt.upscale_factor))
             
-            for idx_b in range(opt.batchSize):
-                iz = random.randrange(1, cntz-1)
-                input = input_nii[:, :, iz-1:iz+2]
-                target = target_nii[:, :, iz-1:iz+2]
-                bicubic = bicubic_nii[:, :, iz-1:iz+2]
-                # print(input.shape, target.shape, bicubic.shape)
+            cnt_iter = (cntz-2) // opt.batchSize
+            seq_order = np.linspace(1, cntz-2, num=cntz-2)
+            random.shuffle(seq_order)
 
-                input, target, bicubic, _ = get_patch(input,target,bicubic, opt.patch_size, opt.upscale_factor)
-                input, target, bicubic, _ = augment(input, target, bicubic)
+            for idx_s in range(cnt_iter):
+                for idx_b in range(opt.batchSize):
+                    iz = seq_order[idx_s*opt.batchSiz+idx_b]
+                    input = input_nii[:, :, iz-1:iz+2]
+                    target = target_nii[:, :, iz-1:iz+2]
+                    bicubic = bicubic_nii[:, :, iz-1:iz+2]
+                    # print(input.shape, target.shape, bicubic.shape)
 
-                for idx_c in range(3):
-                    input_batch[idx_b, idx_c, :, :] = input[:, :, idx_c]
-                    target_batch[idx_b, idx_c, :, :] = target[:, :, idx_c]
-                    bicubic_batch[idx_b, idx_c, :, :] = bicubic[:, :, idx_c]
+                    input, target, bicubic, _ = get_patch(input,target,bicubic, opt.patch_size, opt.upscale_factor)
+                    input, target, bicubic, _ = augment(input, target, bicubic)
 
-            input = torch.cuda.FloatTensor(input_batch)
-            target = torch.cuda.FloatTensor(target_batch)
-            bicubic = torch.cuda.FloatTensor(bicubic_batch)
-            
-            input = Variable(input)
-            target = Variable(target)
-            bicubic = Variable(bicubic)
+                    for idx_c in range(3):
+                        input_batch[idx_b, idx_c, :, :] = input[:, :, idx_c]
+                        target_batch[idx_b, idx_c, :, :] = target[:, :, idx_c]
+                        bicubic_batch[idx_b, idx_c, :, :] = bicubic[:, :, idx_c]
+
+                input = torch.cuda.FloatTensor(input_batch)
+                target = torch.cuda.FloatTensor(target_batch)
+                bicubic = torch.cuda.FloatTensor(bicubic_batch)
                 
-            if cuda:
-                input = input.cuda(gpus_list[0])
-                target = target.cuda(gpus_list[0])
-                bicubic = bicubic.cuda(gpus_list[0])
+                input = Variable(input)
+                target = Variable(target)
+                bicubic = Variable(bicubic)
+                    
+                if cuda:
+                    input = input.cuda(gpus_list[0])
+                    target = target.cuda(gpus_list[0])
+                    bicubic = bicubic.cuda(gpus_list[0])
 
-            optimizer.zero_grad()
-            t0 = time.time()
-            prediction = model(input)
-            # print("prediction", prediction.size())
+                optimizer.zero_grad()
+                t0 = time.time()
+                prediction = model(input)
+                # print("prediction", prediction.size())
 
-            if opt.residual:
-                prediction = prediction + bicubic
+                if opt.residual:
+                    prediction = prediction + bicubic
 
-            loss = criterion(prediction, target)
-            t1 = time.time()
-            epoch_loss += loss.data
-            loss.backward()
-            optimizer.step()
+                loss = criterion(prediction, target)
+                t1 = time.time()
+                epoch_loss += loss.data
+                loss.backward()
+                optimizer.step()
 
-            # print("===> Epoch[{}]({}/{}): Loss: {:.4f} || Timer: {:.4f} sec.".format(epoch, idx_t, n_dataset, loss.data, (t1 - t0)))
-            print("===> Epoch[{}]({}/{}): Loss: {:.4f} || Timer: {:.4f} sec.".format(epoch, idx_t*n_fwhm+idx_f, n_dataset*n_fwhm, loss.data, (t1 - t0)))
+                # print("===> Epoch[{}]({}/{}): Loss: {:.4f} || Timer: {:.4f} sec.".format(epoch, idx_t, n_dataset, loss.data, (t1 - t0)))
+                print("===> Epoch[{}]({}/{}): Loss: {:.4f} || Timer: {:.4f} sec.".format(epoch, idx_t*n_fwhm+idx_f*cnt_iter+idx_s, n_dataset*n_fwhm*cnt_iter, loss.data, (t1 - t0)))
 
     print("===> Epoch {} Complete: Avg. Loss: {:.4f}".format(epoch, epoch_loss / n_dataset))
 
