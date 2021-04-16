@@ -136,7 +136,7 @@ def train(epoch):
 
             for idx_s in range(cnt_iter):
                 for idx_b in range(opt.batchSize):
-                    iz = seq_order[idx_s*opt.batchSiz+idx_b]
+                    iz = seq_order[idx_s*opt.batchSize+idx_b]
                     input = input_nii[:, :, iz-1:iz+2]
                     target = target_nii[:, :, iz-1:iz+2]
                     bicubic = bicubic_nii[:, :, iz-1:iz+2]
