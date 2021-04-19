@@ -112,6 +112,8 @@ def eval():
 
         templ_header = bicubic_nii.header
         templ_affine = bicubic_nii.affine
+        input_header = input_nii.header
+        input_affine = input_nii.affine
         xy1200_data = bicubic_nii.get_fdata()
         xy1200_norm = maxmin_norm(xy1200_data)
         xy300_norm = maxmin_norm(input_nii.get_fdata())
@@ -171,10 +173,15 @@ def eval():
         save_fn = save_dir +'/'+ name
         recon_file = nib.Nifti1Image(pet_recon, templ_affine, templ_header)
         diff_file = nib.Nifti1Image(pet_diff, templ_affine, templ_header)
-        nib.save(recon_file, save_fn + "_recon.nii.gz")
-        nib.save(diff_file, save_fn + "_diff.nii.gz")
-        print(save_fn + "_recon.nii.gz")
-        print(save_fn + "_diff.nii.gz")
+
+        dx, dy, dz = xy300_norm.shape
+        recon_file_small = nib.processing.conform(recon_file, out_shape=(dx, dy, dz), voxel_size=(1, 1, 2.4))
+        diff_file_small = nib.processing.conform(diff_file, out_shape=(dx, dy, dz), voxel_size=(1, 1, 2.4))
+
+        nib.save(recon_file_small, save_fn + "_recon_small.nii.gz")
+        nib.save(diff_file_small, save_fn + "_diff_small.nii.gz")
+        print(save_fn + "_recon_small.nii.gz")
+        print(save_fn + "_diff_small.nii.gz")
 
         # save_img(prediction.cpu().data, name[0])
 
@@ -276,7 +283,7 @@ def chop_forward(x, model, scale, shave=8, min_size=80000, nGPUs=opt.gpus):
 
     return output
 
-model_epoch_hub = ["99"]
+model_epoch_hub = ["9", "19", "29", "39", "49"]
 for model_epoch in model_epoch_hub:
     model_path = opt.model + model_epoch + ".pth"
     model.load_state_dict(torch.load(model_path, map_location=lambda storage, loc: storage))
