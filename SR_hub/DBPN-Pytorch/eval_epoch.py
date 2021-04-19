@@ -16,6 +16,7 @@ from functools import reduce
 from scipy.misc import imsave
 import scipy.io as sio
 import nibabel as nib
+import nibabel.processing
 import numpy as np
 import time
 import glob
