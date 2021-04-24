@@ -3,6 +3,7 @@ import numpy as np
 import nibabel as nib
 import matplotlib.pyplot as plt
 import nibabel.processing
+from nibabel import load, save, Nifti1Image
 
 file_list = glob.glob("./sCT_1_*.nii.gz")
 file_list.sort()
