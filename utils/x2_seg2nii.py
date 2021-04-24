@@ -12,9 +12,9 @@ for minc_path in minc_list:
     minc_file = load(minc_path)
     minc_name = os.path.basename(minc_path)[7:9]
 
-    affine = np.array([[1, 0, 0, 0],
-                       [0, 1, 0, 0],
-                       [0, 0, 1, 0],
+    affine = np.array([[0.712, 0, 0, 0],
+                       [0, 0.860, 0, 0],
+                       [0, 0, 0.847, 0],
                        [0, 0, 0, 1]])
 
     minc_data = minc_file.get_fdata()
