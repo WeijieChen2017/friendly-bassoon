@@ -8,7 +8,7 @@ file_list = glob.glob("./sCT_1_*.nii.gz")
 file_list.sort()
 for file_path in file_list:
 	print(file_path)
-	case_idx = file_path[-7:-4]
+	case_idx = file_path[-10:-7]
 	print(case_idx)
 	mri_path = "./sCT_1_"+case_idx+".nii.gz"
 	gm_path = "./c1sCT_1_"+case_idx+".nii.gz"
