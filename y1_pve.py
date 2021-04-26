@@ -20,6 +20,6 @@ for file_path in file_list:
     print(gaussian.shape)
     out_file = Nifti1Image(mri_data+gaussian, affine=mri_file.affine, header=mri_file.header)
     out_file = nib.processing.smooth_image(out_file, fwhm=3)
-    save_name = "pve"+file_name[3:]+.nii.gz
+    save_name = "pve"+file_name[3:]+".nii.gz"
     save(pet_style, save_name)
     print(save_name)
