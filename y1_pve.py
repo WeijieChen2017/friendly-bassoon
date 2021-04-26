@@ -22,5 +22,5 @@ for file_path in file_list:
     out_file = Nifti1Image(mri_data+gaussian, affine=mri_file.affine, header=mri_file.header)
     out_file = nibabel.processing.smooth_image(out_file, fwhm=3)
     save_name = "pve"+file_name[3:]+".nii.gz"
-    save(pet_style, save_name)
+    save(out_file, save_name)
     print(save_name)
