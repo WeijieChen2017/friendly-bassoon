@@ -32,6 +32,6 @@ for nii_path in nii_list:
 
         save_data = mat_data
         save_file = nib.Nifti1Image(save_data, affine=tmpl_affine, header=tmpl_header)
-        save_name = os.path.dirname(nii_path)+"/"+nii_name+"_"+save_tag+".nii.gz"
+        save_name = "./"+nii_name+"_"+save_tag+".nii.gz"
         nib.save(save_file, save_name)
         print(save_name)
