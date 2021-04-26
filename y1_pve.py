@@ -1,4 +1,5 @@
 from nibabel import load, save, Nifti1Image
+import nibabel.processing
 import os
 import glob
 import nibabel as nib
@@ -19,7 +20,7 @@ for file_path in file_list:
     gaussian = np.random.normal(mean, sigma, (mri_data.shape[0], mri_data.shape[1], mri_data.shape[2]))
     print(gaussian.shape)
     out_file = Nifti1Image(mri_data+gaussian, affine=mri_file.affine, header=mri_file.header)
-    out_file = nib.processing.smooth_image(out_file, fwhm=3)
+    out_file = nibabel.processing.smooth_image(out_file, fwhm=3)
     save_name = "pve"+file_name[3:]+".nii.gz"
     save(pet_style, save_name)
     print(save_name)
