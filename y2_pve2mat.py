@@ -19,7 +19,7 @@ for file_path in file_list:
 
     mdic = {"data": mri_data}
 
-    save_name += file_name+".mat"
+    save_name = file_name+".mat"
     savemat(save_name, mdic)
     print("Mat:", save_name)
     print("--------------------------------------")
