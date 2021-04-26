@@ -8,7 +8,7 @@ import numpy as np
 file_list = glob.glob("syn*.nii.gz")
 file_list.sort()
 for file_path in file_list:
-	print("*"*50)
+    print("*"*50)
     print(file_path)
     file_name = os.path.basename(file_path)[:-7]
     print(file_name)
