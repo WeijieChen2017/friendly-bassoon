@@ -6,7 +6,7 @@ import numpy as np
 import glob
 import os
 
-file_list = glob.glob("pve*.nii.gz")
+file_list = glob.glob("syn*.nii.gz")
 file_list.sort()
 for file_path in file_list:
     print("*"*50)
