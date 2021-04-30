@@ -37,11 +37,11 @@ for mri_path in mri_list:
     file_2s_data[file_2s_data < 0] = 0
     name_2s = "INP"
 
-    scale_factor = np.max((np.amax(fiel_1_data), np.amax(file_2l_data), np.amax(file_2s_data)))
+    scale_factor = np.max((np.amax(file_1_data), np.amax(file_2l_data), np.amax(file_2s_data)))
     print("Norm factor:", scale_factor)
-    file_1 = nib.Nifti1Image(fiel_1_data/scale_factor, file_1.affine, file_1.header)
-    file_2l = nib.Nifti1Image(fiel_2l_data/scale_factor, file_2l.affine, file_2l.header)
-    file_2s = nib.Nifti1Image(fiel_2s_data/scale_factor, file_2s.affine, file_2s.header)
+    file_1 = nib.Nifti1Image(file_1_data/scale_factor, file_1.affine, file_1.header)
+    file_2l = nib.Nifti1Image(file_2l_data/scale_factor, file_2l.affine, file_2l.header)
+    file_2s = nib.Nifti1Image(file_2s_data/scale_factor, file_2s.affine, file_2s.header)
 
     for package in [[file_1, name_1],
                     [file_2l, name_2l], [file_2s, name_2s]]:
