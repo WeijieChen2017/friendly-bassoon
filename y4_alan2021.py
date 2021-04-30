@@ -24,7 +24,7 @@ for mri_path in mri_list:
     
     file_1 = nib.processing.conform(mri_file, out_shape=(1024, 1024, 89), voxel_size=(0.2344, 0.2344, 1.825))
     file_1_data = file_1.get_fdata()
-    fiel_1_data[file_1_data < 0] = 0
+    file_1_data[file_1_data < 0] = 0
     name_1 = "GTH"
     
     file_2l = nib.processing.conform(recon_file, out_shape=(1024, 1024, 89), voxel_size=(0.2344, 0.2344, 1.825))
