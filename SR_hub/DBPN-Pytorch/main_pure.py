@@ -110,9 +110,9 @@ def train(epoch):
     epoch_loss = 0
     model.train()
     nii_list = glob.glob("./dataset/"+opt.hr_train_dataset+"/*_GTH.nii.gz")
-    # print(os.path.join(opt.input_dir,opt.test_dataset)+"/*.nii.gz")
     nii_list.sort()
-    n_dataset = len(train_hub)
+    # print(os.path.join(opt.input_dir,opt.test_dataset)+"/*.nii.gz")
+    n_dataset = len(nii_list)
     for idx_t in range(n_dataset):
 
         nii_path = nii_list[idx_t]
