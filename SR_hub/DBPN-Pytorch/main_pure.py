@@ -179,7 +179,7 @@ def train(epoch):
             optimizer.step()
 
             # print("===> Epoch[{}]({}/{}): Loss: {:.4f} || Timer: {:.4f} sec.".format(epoch, idx_t, n_dataset, loss.data, (t1 - t0)))
-            print("===> Epoch[{}]({}/{}): Loss: {:.4f} || Timer: {:.4f} sec.".format(epoch, idx_t*cnt_iter+idx_s, n_dataset*n_fwhm*cnt_iter, loss.data, (t1 - t0)))
+            print("===> Epoch[{}]({}/{}): Loss: {:.4f} || Timer: {:.4f} sec.".format(epoch, idx_t*cnt_iter+idx_s, n_dataset*cnt_iter, loss.data, (t1 - t0)))
 
     print("===> Epoch {} Complete: Avg. Loss: {:.4f}".format(epoch, epoch_loss / n_dataset))
 
