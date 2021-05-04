@@ -27,7 +27,7 @@ import glob
 parser = argparse.ArgumentParser(description='PyTorch Super Res Example')
 parser.add_argument('--upscale_factor', type=int, default=4, help="super resolution upscale factor")
 parser.add_argument('--batchSize', type=int, default=16, help='training batch size')
-parser.add_argument('--nEpochs', type=int, default=50, help='number of epochs to train for')
+parser.add_argument('--nEpochs', type=int, default=30, help='number of epochs to train for')
 parser.add_argument('--snapshots', type=int, default=10, help='Snapshots')
 parser.add_argument('--start_iter', type=int, default=1, help='Starting Epoch')
 parser.add_argument('--lr', type=float, default=1e-4, help='Learning Rate. Default=0.01')
@@ -173,6 +173,12 @@ def train(epoch):
                 prediction = prediction + bicubic
 
             loss = criterion(prediction, target)
+
+            l1_lambda = 0.001
+            l1_norm = sum(p.abs().sum() for p in model.parameters())
+
+            loss = loss + l1_lambda*l1_norm
+
             t1 = time.time()
             epoch_loss += loss.data
             loss.backward()
