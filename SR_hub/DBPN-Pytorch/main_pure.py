@@ -174,7 +174,7 @@ def train(epoch):
 
             loss = criterion(prediction, target)
 
-            l1_lambda = 0.001
+            l1_lambda = 1e-6
             l1_norm = sum(p.abs().sum() for p in model.parameters())
 
             loss = loss + l1_lambda*l1_norm
