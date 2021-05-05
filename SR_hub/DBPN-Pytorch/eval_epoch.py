@@ -54,7 +54,7 @@ parser.add_argument('--output', default='Results/', help='Location to save check
 parser.add_argument('--test_dataset', type=str, default='eval_epoch')
 parser.add_argument('--model_type', type=str, default='DBPN-RES-MR64-3')
 parser.add_argument('--residual', type=bool, default=False)
-parser.add_argument('--model', default='weights/alan_2021L1122-WCHENDBPN-RES-MR64-3alan2021__epoch_', help='sr pretrained base model')
+parser.add_argument('--model', default='weights/alan_2021L1122-WCHENDBPN-RES-MR64-3alan2021_RIDGE__epoch_', help='sr pretrained base model')
 
 opt = parser.parse_args()
 
@@ -90,6 +90,7 @@ def eval():
     model.eval()
 
     pet_list = glob.glob(os.path.join(opt.input_dir, opt.test_dataset)+"/*_GTH.nii.gz")
+    pet_list += glob.glob(os.path.join(opt.input_dir, opt.test_dataset)+"/*_ORI.nii.gz")
     # pet_list = glob.glob(os.path.join(opt.input_dir, opt.test_dataset)+"/*_ORI.nii.gz")
     # print(os.path.join(opt.input_dir,opt.test_dataset)+"/*.nii.gz")
     pet_list.sort()
