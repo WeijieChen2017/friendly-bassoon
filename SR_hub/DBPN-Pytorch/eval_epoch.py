@@ -89,7 +89,8 @@ if cuda:
 def eval():
     model.eval()
 
-    pet_list = glob.glob(os.path.join(opt.input_dir, opt.test_dataset)+"/*_ORI.nii.gz")
+    pet_list = glob.glob(os.path.join(opt.input_dir, opt.test_dataset)+"/*_GTH.nii.gz")
+    # pet_list = glob.glob(os.path.join(opt.input_dir, opt.test_dataset)+"/*_ORI.nii.gz")
     # print(os.path.join(opt.input_dir,opt.test_dataset)+"/*.nii.gz")
     pet_list.sort()
 
@@ -100,8 +101,12 @@ def eval():
             bicubic_nii = nib.load(pet_path[:-11]+"_x250y250z2400f3.nii.gz") # 1200
             input_nii = nib.load(pet_path[:-11]+"_x1000y1000z2400f3.nii.gz") # 300
         except:
-            bicubic_nii = nib.load(pet_path[:-11]+"_x250y250z2400.nii.gz") # 1200
-            input_nii = nib.load(pet_path[:-11]+"_x1000y1000z2400.nii.gz") # 300
+            try:
+                bicubic_nii = nib.load(pet_path[:-11]+"_x250y250z2400.nii.gz") # 1200
+                input_nii = nib.load(pet_path[:-11]+"_x1000y1000z2400.nii.gz") # 300
+            except:
+                bicubic_nii = nib.load(pet_path[:-11]+"_BIC.nii.gz") # 1200
+                input_nii = nib.load(pet_path[:-11]+"_INP.nii.gz") # 300
 
         _, name = os.path.split(pet_path[:-11])
     # for batch in testing_data_loader:
