@@ -146,6 +146,9 @@ for file_path in file_list:
 
     out_file = Nifti1Image(syn_data, affine=mri_file.affine, header=mri_file.header)
     pet_style = nib.processing.conform(out_file, out_shape=(256, 256, 89), voxel_size=target_physical)
+    out_data = pet_style.get_fdata()
+    out_data[out_data < 0] = 0
+    out_file = Nifti1Image(out_data, affine=mri_file.affine, header=mri_file.header)
     save_name = "./k3m_1_"+case_idx+".nii.gz"
-    save(pet_style, save_name)
+    save(out_file, save_name)
     print(save_name)
