@@ -91,47 +91,47 @@ for file_path in file_list:
     range_y = [center_y-span_y//2, center_y+span_y//2]
     range_z = [center_z-span_z//2, center_z+span_z//2]
 
-    radius_large = [15, 20]
-    radius_small = [5, 10]
-    rad_large = int(np.random.rand()*10+20)
-    rad_small = int(np.random.rand()*10+5)
-    print("rad_large", rad_large)
-    print("rad_small", rad_small)
+    # radius_large = [15, 20]
+    # radius_small = [5, 10]
+    # rad_large = int(np.random.rand()*10+20)
+    # rad_small = int(np.random.rand()*10+5)
+    # print("rad_large", rad_large)
+    # print("rad_small", rad_small)
 
-    dist_between = 75
-    loc_large = [int(np.random.rand()*span_x+range_x[0]),
-                 int(np.random.rand()*span_y+range_y[0]),
-                 int(np.random.rand()*span_z+range_z[0])]
-    loc_small = [int(np.random.rand()*span_x+range_x[0]),
-                 int(np.random.rand()*span_y+range_y[0]),
-                 int(np.random.rand()*span_z+range_z[0])]
-    loc_large = np.array(loc_large)
-    loc_small = np.array(loc_small)
+    # dist_between = 75
+    # loc_large = [int(np.random.rand()*span_x+range_x[0]),
+    #              int(np.random.rand()*span_y+range_y[0]),
+    #              int(np.random.rand()*span_z+range_z[0])]
+    # loc_small = [int(np.random.rand()*span_x+range_x[0]),
+    #              int(np.random.rand()*span_y+range_y[0]),
+    #              int(np.random.rand()*span_z+range_z[0])]
+    # loc_large = np.array(loc_large)
+    # loc_small = np.array(loc_small)
 
-    while np.linalg.norm(loc_large-loc_small) <= dist_between:
-        loc_large = [int(np.random.rand()*span_x+range_x[0]),
-                     int(np.random.rand()*span_y+range_y[0]),
-                     int(np.random.rand()*span_z+range_z[0])]
-        loc_small = [int(np.random.rand()*span_x+range_x[0]),
-                     int(np.random.rand()*span_y+range_y[0]),
-                     int(np.random.rand()*span_z+range_z[0])]
-        loc_large = np.array(loc_large)
-        loc_small = np.array(loc_small)
+    # while np.linalg.norm(loc_large-loc_small) <= dist_between:
+    #     loc_large = [int(np.random.rand()*span_x+range_x[0]),
+    #                  int(np.random.rand()*span_y+range_y[0]),
+    #                  int(np.random.rand()*span_z+range_z[0])]
+    #     loc_small = [int(np.random.rand()*span_x+range_x[0]),
+    #                  int(np.random.rand()*span_y+range_y[0]),
+    #                  int(np.random.rand()*span_z+range_z[0])]
+    #     loc_large = np.array(loc_large)
+    #     loc_small = np.array(loc_small)
 
-    print("loc_large", loc_large)
-    print("loc_small", loc_small)
+    # print("loc_large", loc_large)
+    # print("loc_small", loc_small)
 
-    for idx_x in range(mri_data.shape[0]):
-        for idx_y in range(mri_data.shape[1]):
-            for idx_z in range(mri_data.shape[2]):
-                point = np.array([idx_x+1, idx_y+1, idx_z+1])
-                for package in [[loc_large, rad_large, large_val],
-                                [loc_small, rad_small, small_val]]:
-                    loc = package[0]
-                    rad = package[1]
-                    val = package[2]
-                    if np.linalg.norm(np.abs(loc-point)) <= rad:
-                        syn_data[idx_x+1, idx_y+1, idx_z+1] = val
+    # for idx_x in range(mri_data.shape[0]):
+    #     for idx_y in range(mri_data.shape[1]):
+    #         for idx_z in range(mri_data.shape[2]):
+    #             point = np.array([idx_x+1, idx_y+1, idx_z+1])
+    #             for package in [[loc_large, rad_large, large_val],
+    #                             [loc_small, rad_small, small_val]]:
+    #                 loc = package[0]
+    #                 rad = package[1]
+    #                 val = package[2]
+    #                 if np.linalg.norm(np.abs(loc-point)) <= rad:
+    #                     syn_data[idx_x+1, idx_y+1, idx_z+1] = val
 
     physical = [mri_file.header["pixdim"][1]*mri_data.shape[0],
                 mri_file.header["pixdim"][2]*mri_data.shape[1],
