@@ -18,7 +18,7 @@ for mri_path in mri_list:
     print(mri_path)
     mri_name = os.path.basename(mri_path)
     mri_name = mri_name[:mri_name.find(".")][:-6]
-    case_index = mri_name[:-4]
+    case_index = mri_name[-3:]
     print(case_index)
     exit()
     mri_dir = os.path.dirname(mri_path)+"/"
