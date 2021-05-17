@@ -20,10 +20,10 @@ for mri_path in mri_list:
     mri_name = mri_name[:mri_name.find(".")][:-6]
     case_index = mri_name[-3:]
     print(case_index)
-    exit()
+
     mri_dir = os.path.dirname(mri_path)+"/"
-    mri_file = nib.load(mri_name+".nii.gz")
-    recon_file = nib.load(mri_path)
+    mri_file = nib.load("original_"+case_index+"_recon.nii.gz")
+    recon_file = nib.load("erode_nn_"+case_index+".nii.gz")
     
     file_1 = nib.processing.conform(mri_file, out_shape=(1024, 1024, 89), voxel_size=(0.2344, 0.2344, 1.825))
     file_1_data = file_1.get_fdata()
@@ -52,6 +52,6 @@ for mri_path in mri_list:
         tag = package[1]
 
         # nii_new_file = nib.Nifti1Image(nii_file.get_fdata()/scale_factor, nii_file.affine, nii_file.header)
-        save_name = mri_dir + "SEE3" + "_" + tag + ".nii.gz"
+        save_name = mri_dir + "SEE3_" + case_index + "_" + tag + ".nii.gz"
         nib.save(nii_file, save_name)
         print(save_name)
