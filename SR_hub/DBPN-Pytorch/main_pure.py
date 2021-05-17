@@ -37,7 +37,7 @@ parser.add_argument('--seed', type=int, default=123, help='random seed to use. D
 parser.add_argument('--gpus', default=1, type=int, help='number of gpu')
 parser.add_argument('--data_dir', type=str, default='./dataset')
 parser.add_argument('--data_augmentation', type=bool, default=True)
-parser.add_argument('--hr_train_dataset', type=str, default='alan_2021')
+parser.add_argument('--hr_train_dataset', type=str, default='SEE5')
 parser.add_argument('--model_type', type=str, default='DBPN-RES-MR64-3')
 parser.add_argument('--residual', type=bool, default=True)
 parser.add_argument('--patch_size', type=int, default=40, help='Size of cropped HR image')
@@ -45,7 +45,7 @@ parser.add_argument('--pretrained_sr', default='DBPN-RES-MR64-3_4x.pth', help='s
 # parser.add_argument('--pretrained_sr', default='DBPN-RES-MR64-3_4x.pth', help='sr pretrained base model')
 parser.add_argument('--pretrained', type=bool, default=True)
 parser.add_argument('--save_folder', default='weights/', help='Location to save checkpoint models')
-parser.add_argument('--prefix', default='alan2021_LASSO1e7_', help='Location to save checkpoint models')
+parser.add_argument('--prefix', default='SEE5_L21e6_', help='Location to save checkpoint models')
 
 opt = parser.parse_args()
 gpus_list = range(opt.gpus)
@@ -174,12 +174,13 @@ def train(epoch):
 
             loss = criterion(prediction, target)
 
-            l1_lambda = 1e-7
-            # L2_lambda = 1e-6
-            l1_penalty = sum(p.abs().sum() for p in model.parameters())
-            # l2_penalty = sum((p**2).sum() for p in model.parameters())
+            # l1_lambda = 1e-7
+            L2_lambda = 1e-6
+            # l1_penalty = sum(p.abs().sum() for p in model.parameters())
+            l2_penalty = sum((p**2).sum() for p in model.parameters())
 
-            loss = loss + l1_lambda*l1_penalty
+            # loss = loss + l1_lambda*l1_penalty
+            loss = loss + l2_lambda*l2_penalty
 
             t1 = time.time()
             epoch_loss += loss.data
