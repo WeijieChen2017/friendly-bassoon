@@ -22,8 +22,8 @@ for mri_path in mri_list:
     print(case_index)
 
     mri_dir = os.path.dirname(mri_path)+"/"
-    mri_file = nib.load("original_"+case_index+"_recon.nii.gz")
-    recon_file = nib.load("erode5_nn_"+case_index+".nii.gz")
+    mri_file = nib.load("erode5_nn_"+case_index+".nii.gz")
+    recon_file = nib.load("original_"+case_index+"_recon.nii.gz")
     
     file_1 = nib.processing.conform(mri_file, out_shape=(1024, 1024, 89), voxel_size=(0.2344, 0.2344, 1.825))
     file_1_data = file_1.get_fdata()
