@@ -52,6 +52,6 @@ for mri_path in mri_list:
         tag = package[1]
 
         # nii_new_file = nib.Nifti1Image(nii_file.get_fdata()/scale_factor, nii_file.affine, nii_file.header)
-        save_name = mri_dir + "SEE3_" + case_index + "_" + tag + ".nii.gz"
+        save_name = mri_dir + "SEE5_" + case_index + "_" + tag + ".nii.gz"
         nib.save(nii_file, save_name)
         print(save_name)
