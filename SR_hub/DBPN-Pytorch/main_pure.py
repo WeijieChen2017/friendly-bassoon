@@ -45,7 +45,7 @@ parser.add_argument('--pretrained_sr', default='DBPN-RES-MR64-3_4x.pth', help='s
 # parser.add_argument('--pretrained_sr', default='DBPN-RES-MR64-3_4x.pth', help='sr pretrained base model')
 parser.add_argument('--pretrained', type=bool, default=True)
 parser.add_argument('--save_folder', default='weights/', help='Location to save checkpoint models')
-parser.add_argument('--prefix', default='SEE5_L21e6_', help='Location to save checkpoint models')
+parser.add_argument('--prefix', default='SEE5_L11e6_', help='Location to save checkpoint models')
 
 opt = parser.parse_args()
 gpus_list = range(opt.gpus)
