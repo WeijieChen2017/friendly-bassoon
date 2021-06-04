@@ -54,7 +54,7 @@ parser.add_argument('--output', default='Results/', help='Location to save check
 parser.add_argument('--test_dataset', type=str, default='eval_epoch')
 parser.add_argument('--model_type', type=str, default='DBPN-RES-MR64-3')
 parser.add_argument('--residual', type=bool, default=False)
-parser.add_argument('--model', default='weights/SEE5L1122-WCHENDBPN-RES-MR64-3SEE5__epoch_', help='sr pretrained base model')
+parser.add_argument('--model', default='weights/SEE5L1122-WCHENDBPN-RES-MR64-3SEE5_L11e7_epoch_', help='sr pretrained base model')
 
 opt = parser.parse_args()
 
