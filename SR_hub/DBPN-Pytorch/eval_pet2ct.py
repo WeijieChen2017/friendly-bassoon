@@ -99,8 +99,8 @@ def eval():
         print("&"*60)
         print(pet_path)
         try:
-            bicubic_nii = nib.load(nib.load(pet_path.replace("NAC", "NACB"))) # 1200
-            input_nii = nib.load(nib.load(pet_path.replace("NAC", "NACS"))) # 300
+            bicubic_nii = nib.load(pet_path.replace("NAC", "NACB")) # 1200
+            input_nii = nib.load(pet_path.replace("NAC", "NACS")) # 300
         except:
             pass
             # try:
