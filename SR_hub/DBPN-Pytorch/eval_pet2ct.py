@@ -101,8 +101,8 @@ def eval():
         try:
             bicubic_nii = nib.load(pet_path.replace("NAC", "NACB")) # 1200
             input_nii = nib.load(pet_path.replace("NAC", "NACS")) # 300
-            print("Input:", input_nii.get_fdata().shape)
-            print("Bicubic:", bicubic_nii.get_fdata().shape)
+            print("Input:", pet_path.replace("NAC", "NACS"))
+            print("Bicubic:", pet_path.replace("NAC", "NACB"))
         except:
             pass
             # try:
