@@ -297,7 +297,7 @@ for model_epoch in model_epoch_hub:
     print('Pre-trained SR model is loaded.')
     if cuda:
         model = model.cuda(gpus_list[0])
-    print(model)
+    # print(model)
     eval()
     cmd = "mv results/"+opt.test_dataset+" results/"+opt.test_dataset+"_"+model_epoch
     print(cmd)
