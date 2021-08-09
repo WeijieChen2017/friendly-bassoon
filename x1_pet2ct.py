@@ -22,8 +22,8 @@ for pet_path in pet_list:
     pet_file = nib.load(pet_path)
     ct_file = nib.load(ct_path)
 
-    print(pet_file.shape.get_fdata(), np.amax(pet_file.get_fdata()), np.amin(pet_file.get_fdata()))
-    print(ct_file.shape.get_fdata(), np.amax(ct_file.get_fdata()), np.amin(ct_file.get_fdata()))
+    print(pet_file.get_fdata().shape, np.amax(pet_file.get_fdata()), np.amin(pet_file.get_fdata()))
+    print(ct_file.get_fdata().shape, np.amax(ct_file.get_fdata()), np.amin(ct_file.get_fdata()))
     
     pet_big = nib.processing.conform(pet_file, out_shape=(512, 512, 64), voxel_size=(1.367, 1.367, 3.27))
     name_big = "NACB"
