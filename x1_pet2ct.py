@@ -19,13 +19,13 @@ for pet_path in pet_list:
     pet_dir = os.path.dirname(pet_path)+"/"
     ct_path = pet_path[:-11]+"_CTAC.nii.gz"
 
-    pet_file = nib.load(pet_path).get_fdata()
-    ct_file = nib.load(ct_path).get_fdata()
+    pet_file = nib.load(pet_path)
+    ct_file = nib.load(ct_path)
 
-    print(pet_file.shape, np.amax(pet_file), np.amin(pet_file))
-    print(ct_file.shape, np.amax(ct_file), np.amin(ct_file))
+    print(pet_file.shape.get_fdata(), np.amax(pet_file.get_fdata()), np.amin(pet_file.get_fdata()))
+    print(ct_file.shape.get_fdata(), np.amax(ct_file.get_fdata()), np.amin(ct_file.get_fdata()))
     
-    pet_big = nib.processing.conform(pet_blur, out_shape=(512, 512, 64), voxel_size=(1.367, 1.367, 3.27))
+    pet_big = nib.processing.conform(pet_file, out_shape=(512, 512, 64), voxel_size=(1.367, 1.367, 3.27))
     name_big = "NACB"
     # name_0 = "PF3_ORI"
 
