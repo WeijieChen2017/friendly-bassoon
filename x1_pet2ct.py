@@ -25,8 +25,11 @@ for pet_path in pet_list:
     print(pet_file.get_fdata().shape, np.amax(pet_file.get_fdata()), np.amin(pet_file.get_fdata()))
     print(ct_file.get_fdata().shape, np.amax(ct_file.get_fdata()), np.amin(ct_file.get_fdata()))
     
-    pet_big = nib.processing.conform(pet_file, out_shape=(512, 512, 64), voxel_size=(1.367, 1.367, 3.27))
-    name_big = "NACB"
+    # pet_big = nib.processing.conform(pet_file, out_shape=(512, 512, 64), voxel_size=(1.367, 1.367, 3.27))
+    # name_big = "NACB"
+
+    pet_small = nib.processing.conform(pet_file, out_shape=(128, 128, 64), voxel_size=(5.468, 5.468, 3.27))
+    name_small = "NACS"
     # name_0 = "PF3_ORI"
 
     # pet_1x = nib.processing.conform(pet_blur, out_shape=(300, 300, 103), voxel_size=(1, 1, 2.4))
@@ -35,7 +38,7 @@ for pet_path in pet_list:
     # pet_4x = nib.processing.conform(pet_blur, out_shape=(1200, 1200, 103), voxel_size=(0.25, 0.25, 2.4))
     # name_2 = "PF3_x250y250z2400"
 
-    for package in [[pet_big, name_big]]:
+    for package in [[pet_small, name_small]]: #[pet_big, name_big], 
         nii_file = package[0]
         tag = package[1]
 
