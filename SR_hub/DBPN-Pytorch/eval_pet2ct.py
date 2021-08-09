@@ -122,25 +122,28 @@ def eval():
         templ_affine = bicubic_nii.affine
         input_header = input_nii.header
         input_affine = input_nii.affine
-        xy1200_data = bicubic_nii.get_fdata()
-        xy1200_norm = maxmin_norm(xy1200_data)
-        xy300_norm = maxmin_norm(input_nii.get_fdata())
-        pet_recon = np.zeros(xy1200_data.shape)
-        pet_diff = np.zeros(xy1200_data.shape)
-        pet_z = xy300_norm.shape[2]
-        index = create_index(dataA=xy300_norm, n_slice=n_channel)
-        xy300_slice = np.zeros((1, 3, xy300_norm.shape[0], xy300_norm.shape[1]))
-        print(xy300_slice.shape)
-        # xy1200_slice = np.zeros((xy1200_norm.shape[0], xy1200_norm.shape[1], 1))
+        xy_big = bicubic_nii.get_fdata()
+        xybig_norm = maxmin_norm(xy_big)
+        xysmall_norm = maxmin_norm(input_nii.get_fdata())
+        print(xysmall_norm.shape)
+        print(xybig_norm.shape)
+
+        pet_recon = np.zeros(xy_big.shape)
+        pet_diff = np.zeros(xy_big.shape)
+        pet_z = xysmall_norm.shape[2]
+        index = create_index(dataA=xysmall_norm, n_slice=n_channel)
+        xysmall_slice = np.zeros((1, 3, xysmall_norm.shape[0], xysmall_norm.shape[1]))
+        print(xysmall_slice.shape)
+        # xy1200_slice = np.zeros((xybig_norm.shape[0], xybig_norm.shape[1], 1))
         for idx_z in range(pet_z):
             # print(idx_z)
 
             for idx_c in range(n_channel):
-                xy300_slice[0, idx_c, :, :] = xy300_norm[:, :, int(index[idx_z, idx_c])]
-                # xy1200_slice[idx_c, :, :] = xy1200_norm[:, :, int(index[idx_z, idx_c])]
+                xysmall_slice[0, idx_c, :, :] = xysmall_norm[:, :, int(index[idx_z, idx_c])]
+                # xy1200_slice[idx_c, :, :] = xybig_norm[:, :, int(index[idx_z, idx_c])]
 
             with torch.no_grad():
-                input = torch.cuda.FloatTensor(xy300_slice)
+                input = torch.cuda.FloatTensor(xysmall_slice)
                 # bicubic = torch.cuda.FloatTensor(xy1200_slice)
                 input = Variable(input)
                 # bicubic = Variable(input)
@@ -171,8 +174,8 @@ def eval():
             print("===> Processing: %s || Timer: %.4f sec." % (str(idx_z), (t1 - t0)))
 
         # sum_recon = np.sum(pet_recon)
-        # pet_recon = pet_recon / sum_recon * np.sum(xy1200_data)
-        pet_recon = xy1200_data + pet_diff
+        # pet_recon = pet_recon / sum_recon * np.sum(xy_big)
+        pet_recon = xy_big + pet_diff
 
         save_dir = os.path.join(opt.output,opt.test_dataset)
         if not os.path.exists(save_dir):
@@ -182,7 +185,7 @@ def eval():
         recon_file = nib.Nifti1Image(pet_recon, templ_affine, templ_header)
         diff_file = nib.Nifti1Image(pet_diff, templ_affine, templ_header)
 
-        dx, dy, dz = xy300_norm.shape
+        dx, dy, dz = xysmall_norm.shape
         recon_file_small = nib.processing.conform(recon_file, out_shape=(dx, dy, dz), voxel_size=(1, 1, 2.4))
         diff_file_small = nib.processing.conform(diff_file, out_shape=(dx, dy, dz), voxel_size=(1, 1, 2.4))
 
