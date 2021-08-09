@@ -299,6 +299,6 @@ for model_epoch in model_epoch_hub:
         model = model.cuda(gpus_list[0])
     print(model)
     eval()
-    cmd = "mv Results/"+opt.test_dataset+" Results/"+opt.test_dataset+"_"+model_epoch
+    cmd = "mv results/"+opt.test_dataset+" results/"+opt.test_dataset+"_"+model_epoch
     print(cmd)
     os.system(cmd)
