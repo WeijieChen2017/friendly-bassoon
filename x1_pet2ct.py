@@ -16,6 +16,7 @@ def maxmin_norm(data):
 for pet_path in pet_list:
     print("&"*60)
     print(pet_path)
+    pet_dir = os.path.dirname(pet_path)+"/"
     ct_path = pet_path[:-11]+"_CTAC.nii.gz"
 
     pet_file = nib.load(pet_path).get_fdata()
@@ -39,6 +40,6 @@ for pet_path in pet_list:
         tag = package[1]
 
         nii_new_file = nib.Nifti1Image(maxmin_norm(nii_file.get_fdata()), nii_file.affine, nii_file.header)
-        save_name = pet_dir + pet_name + "_" + tag + ".nii.gz"
+        save_name = pet_dir + pet_path[:-11] + "_" + tag + ".nii.gz"
         nib.save(nii_new_file, save_name)
         print(save_name)
