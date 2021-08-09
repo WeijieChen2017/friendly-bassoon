@@ -16,7 +16,7 @@ def maxmin_norm(data):
 for pet_path in pet_list:
     print("&"*60)
     print(pet_path)
-    ct_path = pet_path[:-11]+"CTAC.nii.gz"
+    ct_path = pet_path[:-11]+"_CTAC.nii.gz"
 
     pet_file = nib.load(pet_path).get_fdata()
     ct_file = nib.load(ct_path).get_fdata()
