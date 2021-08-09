@@ -89,8 +89,8 @@ if cuda:
 def eval():
     model.eval()
 
-    pet_list = glob.glob(os.path.join(opt.input_dir, opt.test_dataset)+"/*_GTH.nii.gz")
-    pet_list += glob.glob(os.path.join(opt.input_dir, opt.test_dataset)+"/*_ORI.nii.gz")
+    pet_list = glob.glob(os.path.join(opt.input_dir, opt.test_dataset)+"/*_CTAC.nii.gz")
+    pet_list += glob.glob(os.path.join(opt.input_dir, opt.test_dataset)+"/*_NAC.nii.gz")
     # pet_list = glob.glob(os.path.join(opt.input_dir, opt.test_dataset)+"/*_ORI.nii.gz")
     # print(os.path.join(opt.input_dir,opt.test_dataset)+"/*.nii.gz")
     pet_list.sort()
@@ -99,8 +99,8 @@ def eval():
         print("&"*60)
         print(pet_path)
         try:
-            bicubic_nii = nib.load(pet_path[:-11]+"_x250y250z2400f3.nii.gz") # 1200
-            input_nii = nib.load(pet_path[:-11]+"_x1000y1000z2400f3.nii.gz") # 300
+            bicubic_nii = nib.load(nib.load(pet_path.replace("NAC", "NACB"))) # 1200
+            input_nii = nib.load(nib.load(pet_path.replace("NAC", "NACS"))) # 300
         except:
             try:
                 bicubic_nii = nib.load(pet_path[:-11]+"_x250y250z2400.nii.gz") # 1200
