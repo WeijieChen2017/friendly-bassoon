@@ -4,7 +4,7 @@ import nibabel as nib
 import numpy as np
 import nibabel.processing
 
-pet_list = glob.glob("./data/PET2CT_score_1/*_NAC.nii.gz")
+pet_list = glob.glob("./data/score_1/*_NAC.nii.gz")
 pet_list.sort()
 
 def maxmin_norm(data):
@@ -21,8 +21,8 @@ for pet_path in pet_list:
     pet_file = nib.load(pet_path).get_fdata()
     ct_file = nib.load(ct_path).get_fdata()
 
-    print(pet_file.shape)
-    print(ct_file.shape)
+    print(pet_file.shape, np.amax(pet_file), np.amin(pet_file))
+    print(ct_file.shape, np.amax(ct_file), np.amin(ct_file))
     
     # name_0 = "PF3_ORI"
 
