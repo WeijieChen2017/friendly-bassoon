@@ -42,7 +42,9 @@ for pet_path in pet_list:
         nii_file = package[0]
         tag = package[1]
 
-        nii_new_file = nib.Nifti1Image(maxmin_norm(nii_file.get_fdata()), nii_file.affine, nii_file.header)
+        nii_new_data = nii_file.get_fdata()
+        nii_new_data[nii_new_data<0] = 0
+        nii_new_file = nib.Nifti1Image(nii_new_data, nii_file.affine, nii_file.header)
         save_name = pet_path[:-11] + "_" + tag + ".nii.gz"
         nib.save(nii_new_file, save_name)
         print(save_name)
