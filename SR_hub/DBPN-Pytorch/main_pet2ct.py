@@ -169,8 +169,8 @@ def train(epoch):
             prediction = model(input)
             # print("prediction", prediction.size())
 
-            if opt.residual:
-                prediction = prediction + bicubic
+            # if opt.residual:
+            #     prediction = prediction + bicubic
 
             loss = criterion(prediction, target)
 
